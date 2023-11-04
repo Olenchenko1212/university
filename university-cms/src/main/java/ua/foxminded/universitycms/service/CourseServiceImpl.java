@@ -3,6 +3,7 @@ package ua.foxminded.universitycms.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,11 @@ public class CourseServiceImpl implements CourseService {
 	}
 	
 	@Override
+	public Optional<Course> getCourseById(Long courseId) throws SQLException {
+		return courseDao.findById(courseId);
+	}
+	
+	@Override
 	@Transactional
 	public void saveCourse(Course course) throws Exception, SQLException {
 		if(!courseDao.findByCourseName(course.getCourseName()).isPresent()) {
@@ -42,13 +48,13 @@ public class CourseServiceImpl implements CourseService {
 	}
 	
 	@Override
-	public void deleteAllCourses(List<Course> courses) throws SQLException {
-		logger.info("Getting all {} courses from DB for the deleting", courses.size());
-		if(!courses.isEmpty()) {
-			courseDao.deleteAllInBatch(courses);
-			logger.info("{} courses delete completely", courses.size());
+	public void deleteCourse(Long courseId) throws SQLException {
+		logger.info("Getting course Id = {} for the deleting", courseId);
+		if(courseDao.findById(courseId).isPresent()) {
+			courseDao.deleteById(courseId);
+			logger.info("Course Id = {} delete completely", courseId);
 		} else {
-			logger.error("Not find courses from DB", new Exception("Not find courses from DB"));
+			logger.error("Not find course from DB", new Exception("Not find course from DB"));
 		}
 	}
 }
