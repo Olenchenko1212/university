@@ -12,5 +12,4 @@ public interface TeacherService {
 	Optional<Teacher> getTeacherById(Long teacherId) throws SQLException;
 	void saveTeacherOnCourse(Teacher teacher, Course course) throws Exception, SQLException;
 	void deleteTeacher(Long teacherId) throws SQLException;
-	Optional<Teacher> getTeacherCourse(Long courseId) throws SQLException;
 }

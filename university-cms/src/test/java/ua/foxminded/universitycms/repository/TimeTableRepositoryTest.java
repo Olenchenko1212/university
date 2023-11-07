@@ -1,4 +1,4 @@
-package ua.foxminded.universitycms.dao;
+package ua.foxminded.universitycms.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,10 +19,10 @@ import ua.foxminded.universitycms.util.Config;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(scripts = { "/sql/clean_tables.sql", "/sql/samply_data.sql" },
 				executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class TimeTableDaoTest {
+public class TimeTableRepositoryTest {
 	
 	@Autowired
-	private TimeTableDao dao;
+	private TimeTableRepository dao;
 	
 	@Test
 	void whenTwoPairsByTeacherForDayIsPresentExpectListTimeTableWithSizeEqualsTwo() throws SQLException {

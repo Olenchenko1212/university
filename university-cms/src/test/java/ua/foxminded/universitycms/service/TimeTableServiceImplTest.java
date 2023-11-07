@@ -16,25 +16,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import ua.foxminded.universitycms.dao.GroupDao;
-import ua.foxminded.universitycms.dao.StudentDao;
-import ua.foxminded.universitycms.dao.TeacherDao;
-import ua.foxminded.universitycms.dao.TimeTableDao;
 import ua.foxminded.universitycms.models.Group;
 import ua.foxminded.universitycms.models.Student;
 import ua.foxminded.universitycms.models.Teacher;
 import ua.foxminded.universitycms.models.TimeTable;
+import ua.foxminded.universitycms.repository.GroupRepository;
+import ua.foxminded.universitycms.repository.StudentRepository;
+import ua.foxminded.universitycms.repository.TeacherRepository;
+import ua.foxminded.universitycms.repository.TimeTableRepository;
 
 @SpringBootTest(classes = { TimeTableServiceImpl.class })
 class TimeTableServiceImplTest {
 	@MockBean
-	TimeTableDao timeTableDao;
+	TimeTableRepository timeTableRepository;
 	@MockBean
-	TeacherDao teacherDao;
+	TeacherRepository teacherRepository;
 	@MockBean
-	StudentDao studentDao;
+	StudentRepository studentRepository;
 	@MockBean
-	GroupDao groupDao;
+	GroupRepository groupRepository;
 
 	@Autowired
 	TimeTableServiceImpl timeTableService;
@@ -53,12 +53,12 @@ class TimeTableServiceImplTest {
 		teacher.setTeacherName("Bob");
 		teacher.setTeacherSurname("Harvy");
 
-		when(timeTableDao.findTimeTableByPairNumberAndDate(timeTable.getPairNumber(), timeTable.getTimeTableDate()))
+		when(timeTableRepository.findTimeTableByPairNumberAndDate(timeTable.getPairNumber(), timeTable.getTimeTableDate()))
 				.thenReturn(expectTimeTableForDayAndTime);
-		when(groupDao.findById(group.getGroupId())).thenReturn(Optional.of(group));
-		when(teacherDao.findById(teacher.getTeacherId())).thenReturn(Optional.of(teacher));
+		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
+		when(teacherRepository.findById(teacher.getTeacherId())).thenReturn(Optional.of(teacher));
 		timeTableService.saveEntrySchedule(timeTable, 1L, 11L);
-		verify(timeTableDao, times(1)).save(timeTable);
+		verify(timeTableRepository, times(1)).save(timeTable);
 	}
 
 	@Test
@@ -77,12 +77,12 @@ class TimeTableServiceImplTest {
 		teacher.setTeacherName("Bob");
 		teacher.setTeacherSurname("Harvy");
 
-		when(timeTableDao.findTimeTableByPairNumberAndDate(timeTable.getPairNumber(), timeTable.getTimeTableDate()))
+		when(timeTableRepository.findTimeTableByPairNumberAndDate(timeTable.getPairNumber(), timeTable.getTimeTableDate()))
 				.thenReturn(expectTimeTableForDayAndTime);
-		when(groupDao.findById(group.getGroupId())).thenReturn(Optional.of(group));
-		when(teacherDao.findById(teacher.getTeacherId())).thenReturn(Optional.of(teacher));
+		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
+		when(teacherRepository.findById(teacher.getTeacherId())).thenReturn(Optional.of(teacher));
 		timeTableService.saveEntrySchedule(timeTable, 1L, 11L);
-		verify(timeTableDao, times(1)).save(timeTable);
+		verify(timeTableRepository, times(1)).save(timeTable);
 	}
 
 	@Test
@@ -101,12 +101,12 @@ class TimeTableServiceImplTest {
 		teacher.setTeacherName("Bob");
 		teacher.setTeacherSurname("Harvy");
 
-		when(timeTableDao.findTimeTableByPairNumberAndDate(timeTable.getPairNumber(), timeTable.getTimeTableDate()))
+		when(timeTableRepository.findTimeTableByPairNumberAndDate(timeTable.getPairNumber(), timeTable.getTimeTableDate()))
 				.thenReturn(expectTimeTableForDayAndTime);
-		when(groupDao.findById(group.getGroupId())).thenReturn(Optional.of(group));
-		when(teacherDao.findById(teacher.getTeacherId())).thenReturn(Optional.of(teacher));
+		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
+		when(teacherRepository.findById(teacher.getTeacherId())).thenReturn(Optional.of(teacher));
 		timeTableService.saveEntrySchedule(timeTable, 1L, 11L);
-		verify(timeTableDao, never()).save(timeTable);
+		verify(timeTableRepository, never()).save(timeTable);
 	}
 
 	@Test
@@ -125,12 +125,12 @@ class TimeTableServiceImplTest {
 		teacher.setTeacherName("Bob");
 		teacher.setTeacherSurname("Harvy");
 
-		when(timeTableDao.findTimeTableByPairNumberAndDate(timeTable.getPairNumber(), timeTable.getTimeTableDate()))
+		when(timeTableRepository.findTimeTableByPairNumberAndDate(timeTable.getPairNumber(), timeTable.getTimeTableDate()))
 				.thenReturn(expectTimeTableForDayAndTime);
-		when(groupDao.findById(group.getGroupId())).thenReturn(Optional.of(group));
-		when(teacherDao.findById(teacher.getTeacherId())).thenReturn(Optional.of(teacher));
+		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
+		when(teacherRepository.findById(teacher.getTeacherId())).thenReturn(Optional.of(teacher));
 		timeTableService.saveEntrySchedule(timeTable, 1L, 11L);
-		verify(timeTableDao, never()).save(timeTable);
+		verify(timeTableRepository, never()).save(timeTable);
 	}
 
 	@Test
@@ -144,11 +144,11 @@ class TimeTableServiceImplTest {
 		expectTimeTableForStudent.add(new TimeTable(1L, 3, LocalDate.of(2023, 05, 25), 2L, 55L));
 		expectTimeTableForStudent.add(new TimeTable(2L, 4, LocalDate.of(2023, 05, 25), 2L, 11L));
 		
-		when(studentDao.findById(student.getStudentId())).thenReturn(Optional.of(student));
-		when(timeTableDao.findTimeTableByGroupForDay(LocalDate.of(2023, 05, 25), student.getGroupId())).thenReturn(expectTimeTableForStudent);
+		when(studentRepository.findById(student.getStudentId())).thenReturn(Optional.of(student));
+		when(timeTableRepository.findTimeTableByGroupForDay(LocalDate.of(2023, 05, 25), student.getGroupId())).thenReturn(expectTimeTableForStudent);
 		timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getStudentId());
-		verify(studentDao, times(1)).findById(student.getStudentId());
-		verify(timeTableDao, times(1)).findTimeTableByGroupForDay(LocalDate.of(2023, 05, 25), student.getGroupId());
+		verify(studentRepository, times(1)).findById(student.getStudentId());
+		verify(timeTableRepository, times(1)).findTimeTableByGroupForDay(LocalDate.of(2023, 05, 25), student.getGroupId());
 		assertEquals(expectTimeTableForStudent, timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getStudentId()));
 	}
 	
@@ -161,11 +161,11 @@ class TimeTableServiceImplTest {
 		student.setGroupId(2L);
 		List<TimeTable> expectTimeTableForStudent = new ArrayList<TimeTable>();
 
-		when(studentDao.findById(student.getStudentId())).thenReturn(Optional.of(student));
-		when(timeTableDao.findTimeTableByGroupForDay(LocalDate.of(2023, 05, 25), student.getGroupId())).thenReturn(expectTimeTableForStudent);
+		when(studentRepository.findById(student.getStudentId())).thenReturn(Optional.of(student));
+		when(timeTableRepository.findTimeTableByGroupForDay(LocalDate.of(2023, 05, 25), student.getGroupId())).thenReturn(expectTimeTableForStudent);
 		timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getStudentId());
-		verify(studentDao, times(1)).findById(student.getStudentId());
-		verify(timeTableDao, times(1)).findTimeTableByGroupForDay(LocalDate.of(2023, 05, 25), student.getGroupId());
+		verify(studentRepository, times(1)).findById(student.getStudentId());
+		verify(timeTableRepository, times(1)).findTimeTableByGroupForDay(LocalDate.of(2023, 05, 25), student.getGroupId());
 		assertEquals(new ArrayList<TimeTable>(), timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getStudentId()));
 	}
 }

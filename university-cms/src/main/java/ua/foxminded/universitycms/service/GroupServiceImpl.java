@@ -1,7 +1,6 @@
 package ua.foxminded.universitycms.service;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,39 +10,41 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import ua.foxminded.universitycms.dao.CourseDao;
-import ua.foxminded.universitycms.dao.GroupDao;
 import ua.foxminded.universitycms.models.Course;
 import ua.foxminded.universitycms.models.Group;
+import ua.foxminded.universitycms.repository.CourseRepository;
+import ua.foxminded.universitycms.repository.GroupRepository;
 
 @Service
 public class GroupServiceImpl implements GroupService {
 	private static Logger logger = LoggerFactory.getLogger(GroupServiceImpl.class);
 
-	private final GroupDao groupDao;
-	private final CourseDao courseDao;
+	private final GroupRepository groupRepository;
+	private final CourseRepository courseRepository;
 
-	public GroupServiceImpl(GroupDao groupDao, CourseDao courseDao) {
-		this.groupDao = groupDao;
-		this.courseDao = courseDao;
+	public GroupServiceImpl(GroupRepository groupRepository, CourseRepository courseRepository) {
+		this.groupRepository = groupRepository;
+		this.courseRepository = courseRepository;
 	}
 
 	@Override
 	public List<Group> getAllGroups() throws SQLException {
-		List<Group> allGrouprs = new ArrayList<>(groupDao.findAll());
+		List<Group> allGrouprs = groupRepository.findAll();
 		logger.info("Getting all {} groups from DB", allGrouprs.size());
 		return allGrouprs;
 	}
 
 	@Override
 	public Optional<Group> getGroupById(Long groupId) throws SQLException {
-		return groupDao.findById(groupId);
+		logger.info("Getting group id = {} from DB", groupId);
+		return groupRepository.findById(groupId);
 	}
 
 	@Override
+	@Transactional
 	public void saveGroup(Group group) throws Exception, SQLException {
-		if (!groupDao.findByGroupName(group.getGroupName()).isPresent()) {
-			groupDao.saveAndFlush(group);
+		if (!groupRepository.findByGroupName(group.getGroupName()).isPresent()) {
+			groupRepository.saveAndFlush(group);
 			logger.info("Save group {} into DB", group.getGroupName());
 		} else {
 			logger.error("Group {} is allready in DB", group.getGroupName(), new Exception("Group is allready in DB"));
@@ -51,13 +52,14 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
+	@Transactional
 	public void saveGroupWithCourse(Group group, Course course) throws Exception, SQLException {
-		if (!groupDao.findByGroupName(group.getGroupName()).isPresent()
-				&& !courseDao.findByCourseName(course.getCourseName()).isPresent()) {
+		if (!groupRepository.findByGroupName(group.getGroupName()).isPresent()
+				&& !courseRepository.findByCourseName(course.getCourseName()).isPresent()) {
 			group.getCourses().add(course);
 			course.getGroups().add(group);
-			groupDao.save(group);
-			courseDao.save(course);
+			groupRepository.save(group);
+			courseRepository.save(course);
 			logger.info("Save group {} and course {} into DB", group.getGroupName(), course.getCourseName());
 		} else {
 			logger.error("Group {} or course {} is already in DB", group.getGroupName(), course.getCourseName(),
@@ -68,16 +70,16 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	@Transactional
 	public void saveEnrollGroupToCourse(Long groupId, Long courseId) throws Exception, SQLException {
-		Optional<Group> group = groupDao.findById(groupId);
-		Optional<Course> course = courseDao.findById(courseId);
+		Optional<Group> group = groupRepository.findById(groupId);
+		Optional<Course> course = courseRepository.findById(courseId);
 		if (group.isPresent() && course.isPresent()) {
 			Optional<Course> courseInGroup = group.get().getCourses().stream()
 					.filter(c -> c.getCourseId().equals(courseId)).findFirst();
 			if (!courseInGroup.isPresent()) {
 				course.get().getGroups().add(group.get());
 				group.get().getCourses().add(course.get());
-				courseDao.save(course.get());
-				groupDao.save(group.get());
+				courseRepository.save(course.get());
+				groupRepository.save(group.get());
 				logger.info("Save Enroll group Id = {} to course Id = {} into DB", groupId, courseId);
 			} else {
 				logger.error("Enroll with group Id = {} and course Id = {} is already present in DB", groupId, courseId,
@@ -90,9 +92,10 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteGroup(Long groupID) throws SQLException {
-		if (groupDao.findById(groupID).isPresent()) {
-			groupDao.deleteById(groupID);
+		if (groupRepository.findById(groupID).isPresent()) {
+			groupRepository.deleteById(groupID);
 			logger.info("Group Id = {} delete from DB", groupID);
 		} else {
 			logger.error("Group Id = {} is not find in DB", groupID, new Exception("Group is not find in DB"));

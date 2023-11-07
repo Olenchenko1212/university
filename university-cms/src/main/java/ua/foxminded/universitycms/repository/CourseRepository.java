@@ -1,4 +1,4 @@
-package ua.foxminded.universitycms.dao;
+package ua.foxminded.universitycms.repository;
 
 import java.sql.SQLException;
 import java.util.Optional;
@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import ua.foxminded.universitycms.models.Course;
 
 @Repository
-public interface CourseDao extends JpaRepository<Course, Long> {
+public interface CourseRepository extends JpaRepository<Course, Long> {
 	Optional<Course> findByCourseName(String courseName) throws SQLException;
 }

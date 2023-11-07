@@ -1,4 +1,4 @@
-package ua.foxminded.universitycms.dao;
+package ua.foxminded.universitycms.repository;
 
 import java.sql.SQLException;
 import java.util.Optional;
@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import ua.foxminded.universitycms.models.Group;
 
 @Repository
-public interface GroupDao extends JpaRepository<Group, Long> {
+public interface GroupRepository extends JpaRepository<Group, Long> {
 	Optional<Group> findByGroupName(String groupName) throws SQLException;
 }

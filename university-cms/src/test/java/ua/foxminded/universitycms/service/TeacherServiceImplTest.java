@@ -11,17 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import ua.foxminded.universitycms.dao.CourseDao;
-import ua.foxminded.universitycms.dao.TeacherDao;
 import ua.foxminded.universitycms.models.Course;
 import ua.foxminded.universitycms.models.Teacher;
+import ua.foxminded.universitycms.repository.CourseRepository;
+import ua.foxminded.universitycms.repository.TeacherRepository;
 
 @SpringBootTest(classes = { TeacherServiceImpl.class })
 public class TeacherServiceImplTest {
 	@MockBean
-	TeacherDao teacherDao;
+	TeacherRepository teacherRepository;
 	@MockBean
-	CourseDao courseDao;
+	CourseRepository courseRepository;
 
 	@Autowired
 	TeacherServiceImpl teacherService;
@@ -36,8 +36,8 @@ public class TeacherServiceImplTest {
 		course.setCourseDescription("Learn Philosophy very well");
 		
 		teacherService.saveTeacherOnCourse(teacher, course);
-		verify(teacherDao, times(1)).save(teacher);
-		verify(courseDao, times(1)).save(course);
+		verify(teacherRepository, times(1)).save(teacher);
+		verify(courseRepository, times(1)).save(course);
 	}
 	
 	@Test
@@ -50,8 +50,8 @@ public class TeacherServiceImplTest {
 		course.setCourseDescription("Learn Philosophy very well");
 
 		teacherService.saveTeacherOnCourse(teacher, course);
-		verify(teacherDao, never()).save(teacher);
-		verify(courseDao, never()).save(course);
+		verify(teacherRepository, never()).save(teacher);
+		verify(courseRepository, never()).save(course);
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class TeacherServiceImplTest {
 		course.setCourseDescription("Learn Philosophy very well");
 
 		teacherService.saveTeacherOnCourse(teacher, course);
-		verify(teacherDao, never()).save(teacher);
-		verify(courseDao, never()).save(course);
+		verify(teacherRepository, never()).save(teacher);
+		verify(courseRepository, never()).save(course);
 	}
 }

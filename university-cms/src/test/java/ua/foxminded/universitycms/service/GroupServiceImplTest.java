@@ -13,18 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import ua.foxminded.universitycms.dao.CourseDao;
-import ua.foxminded.universitycms.dao.GroupDao;
 import ua.foxminded.universitycms.models.Course;
 import ua.foxminded.universitycms.models.Group;
+import ua.foxminded.universitycms.repository.CourseRepository;
+import ua.foxminded.universitycms.repository.GroupRepository;
 
 @SpringBootTest(classes = { GroupServiceImpl.class })
 public class GroupServiceImplTest {
 
 	@MockBean
-	GroupDao groupDao;
+	GroupRepository groupRepository;
 	@MockBean
-	CourseDao courseDao;
+	CourseRepository courseRepository;
 
 	@Autowired
 	GroupServiceImpl groupService;
@@ -35,10 +35,10 @@ public class GroupServiceImplTest {
 		group.setGroupId(1L);
 		group.setGroupName("df-45");
 
-		when(groupDao.findByGroupName(group.getGroupName())).thenReturn(Optional.empty());
+		when(groupRepository.findByGroupName(group.getGroupName())).thenReturn(Optional.empty());
 		groupService.saveGroup(group);
-		verify(groupDao, times(1)).findByGroupName(group.getGroupName());
-		verify(groupDao, times(1)).saveAndFlush(group);
+		verify(groupRepository, times(1)).findByGroupName(group.getGroupName());
+		verify(groupRepository, times(1)).saveAndFlush(group);
 	}
 
 	@Test
@@ -47,10 +47,10 @@ public class GroupServiceImplTest {
 		group.setGroupId(4L);
 		group.setGroupName("ff-45");
 
-		when(groupDao.findByGroupName(group.getGroupName())).thenReturn(Optional.of(group));
+		when(groupRepository.findByGroupName(group.getGroupName())).thenReturn(Optional.of(group));
 		groupService.saveGroup(group);
-		verify(groupDao, times(1)).findByGroupName(group.getGroupName());
-		verify(groupDao, never()).saveAndFlush(group);
+		verify(groupRepository, times(1)).findByGroupName(group.getGroupName());
+		verify(groupRepository, never()).saveAndFlush(group);
 	}
 
 	@Test
@@ -62,13 +62,13 @@ public class GroupServiceImplTest {
 		course.setCourseName("Philosophy");
 		course.setCourseDescription("Learn Philosophy very well");
 		
-		when(groupDao.findByGroupName(group.getGroupName())).thenReturn(Optional.empty());
-		when(courseDao.findByCourseName(course.getCourseName())).thenReturn(Optional.empty());
+		when(groupRepository.findByGroupName(group.getGroupName())).thenReturn(Optional.empty());
+		when(courseRepository.findByCourseName(course.getCourseName())).thenReturn(Optional.empty());
 		groupService.saveGroupWithCourse(group, course);
-		verify(groupDao, times(1)).findByGroupName(group.getGroupName());
-		verify(courseDao, times(1)).findByCourseName(course.getCourseName());
-		verify(groupDao, times(1)).save(group);
-		verify(courseDao, times(1)).save(course);
+		verify(groupRepository, times(1)).findByGroupName(group.getGroupName());
+		verify(courseRepository, times(1)).findByCourseName(course.getCourseName());
+		verify(groupRepository, times(1)).save(group);
+		verify(courseRepository, times(1)).save(course);
 	}
 	
 	@Test
@@ -80,13 +80,13 @@ public class GroupServiceImplTest {
 		course.setCourseName("Philosophy");
 		course.setCourseDescription("Learn Philosophy very well");
 		
-		when(groupDao.findByGroupName(group.getGroupName())).thenReturn(Optional.of(group));
-		when(courseDao.findByCourseName(course.getCourseName())).thenReturn(Optional.of(course));
+		when(groupRepository.findByGroupName(group.getGroupName())).thenReturn(Optional.of(group));
+		when(courseRepository.findByCourseName(course.getCourseName())).thenReturn(Optional.of(course));
 		groupService.saveGroupWithCourse(group, course);
-		verify(groupDao, times(1)).findByGroupName(group.getGroupName());
-		verify(courseDao, never()).findByCourseName(course.getCourseName());
-		verify(groupDao, never()).save(group);
-		verify(courseDao, never()).save(course);
+		verify(groupRepository, times(1)).findByGroupName(group.getGroupName());
+		verify(courseRepository, never()).findByCourseName(course.getCourseName());
+		verify(groupRepository, never()).save(group);
+		verify(courseRepository, never()).save(course);
 	}
 	
 	@Test
@@ -99,12 +99,12 @@ public class GroupServiceImplTest {
 		course.setCourseName("Philosophy");
 		course.setCourseDescription("Learn Philosophy very well");
 		
-		when(groupDao.findById(group.getGroupId())).thenReturn(Optional.of(group));
-		when(courseDao.findById(course.getCourseId())).thenReturn(Optional.of(course));
+		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
+		when(courseRepository.findById(course.getCourseId())).thenReturn(Optional.of(course));
 		groupService.saveEnrollGroupToCourse(group.getGroupId(), course.getCourseId());
-		verify(groupDao, times(1)).findById(group.getGroupId());
-		verify(courseDao, times(1)).findById(course.getCourseId());
-		verify(courseDao, times(1)).save(course);
+		verify(groupRepository, times(1)).findById(group.getGroupId());
+		verify(courseRepository, times(1)).findById(course.getCourseId());
+		verify(courseRepository, times(1)).save(course);
 	}
 	
 	@Test
@@ -117,12 +117,12 @@ public class GroupServiceImplTest {
 		course.setCourseName("Philosophy");
 		course.setCourseDescription("Learn Philosophy very well");
 		
-		when(groupDao.findById(group.getGroupId())).thenReturn(Optional.empty());
-		when(courseDao.findById(course.getCourseId())).thenReturn(Optional.empty());
+		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.empty());
+		when(courseRepository.findById(course.getCourseId())).thenReturn(Optional.empty());
 		groupService.saveEnrollGroupToCourse(group.getGroupId(), course.getCourseId());
-		verify(groupDao, times(1)).findById(group.getGroupId());
-		verify(courseDao, times(1)).findById(course.getCourseId());
-		verify(courseDao, never()).save(course);
+		verify(groupRepository, times(1)).findById(group.getGroupId());
+		verify(courseRepository, times(1)).findById(course.getCourseId());
+		verify(courseRepository, never()).save(course);
 	}
 	
 	@Test
@@ -137,12 +137,12 @@ public class GroupServiceImplTest {
 		course.getGroups().add(group);
 		group.getCourses().add(course);
 		
-		when(groupDao.findById(group.getGroupId())).thenReturn(Optional.of(group));
-		when(courseDao.findById(course.getCourseId())).thenReturn(Optional.of(course));
+		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
+		when(courseRepository.findById(course.getCourseId())).thenReturn(Optional.of(course));
 		groupService.saveEnrollGroupToCourse(group.getGroupId(), course.getCourseId());
-		verify(groupDao, times(1)).findById(group.getGroupId());
-		verify(courseDao, times(1)).findById(course.getCourseId());
-		verify(courseDao, never()).save(course);
+		verify(groupRepository, times(1)).findById(group.getGroupId());
+		verify(courseRepository, times(1)).findById(course.getCourseId());
+		verify(courseRepository, never()).save(course);
 	}
 	
 	@Test
@@ -151,10 +151,10 @@ public class GroupServiceImplTest {
 		group.setGroupId(4L);
 		group.setGroupName("ff-45");
 		
-		when(groupDao.findById(group.getGroupId())).thenReturn(Optional.of(group));
+		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
 		groupService.deleteGroup(group.getGroupId());
-		verify(groupDao, times(1)).findById(group.getGroupId());
-		verify(groupDao, times(1)).deleteById(group.getGroupId());
+		verify(groupRepository, times(1)).findById(group.getGroupId());
+		verify(groupRepository, times(1)).deleteById(group.getGroupId());
 	}
 	
 	@Test
@@ -163,9 +163,9 @@ public class GroupServiceImplTest {
 		group.setGroupId(4L);
 		group.setGroupName("ff-45");
 		
-		when(groupDao.findById(group.getGroupId())).thenReturn(Optional.empty());
+		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.empty());
 		groupService.deleteGroup(group.getGroupId());
-		verify(groupDao, times(1)).findById(group.getGroupId());
-		verify(groupDao, never()).deleteById(group.getGroupId());
+		verify(groupRepository, times(1)).findById(group.getGroupId());
+		verify(groupRepository, never()).deleteById(group.getGroupId());
 	}
 }

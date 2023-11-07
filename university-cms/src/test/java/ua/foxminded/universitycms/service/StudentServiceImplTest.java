@@ -13,18 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import ua.foxminded.universitycms.dao.GroupDao;
-import ua.foxminded.universitycms.dao.StudentDao;
 import ua.foxminded.universitycms.models.Group;
 import ua.foxminded.universitycms.models.Student;
+import ua.foxminded.universitycms.repository.GroupRepository;
+import ua.foxminded.universitycms.repository.StudentRepository;
 
 @SpringBootTest(classes = { StudentServiceImpl.class })
 public class StudentServiceImplTest {
 	@MockBean
-	StudentDao studentDao;
+	StudentRepository studentRepository;
 	
 	@MockBean
-	GroupDao groupDao;
+	GroupRepository groupRepository;
 	
 	@Autowired
 	StudentServiceImpl studentService;
@@ -39,10 +39,10 @@ public class StudentServiceImplTest {
 		group.setGroupId(1L);
 		group.setGroupName("hh-23");
 		
-		when(groupDao.findById(group.getGroupId())).thenReturn(Optional.of(group));
+		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
 		studentService.saveStudent(student, 1L);
-		verify(groupDao, times(1)).findById(group.getGroupId());
-		verify(studentDao, times(1)).saveAndFlush(student);
+		verify(groupRepository, times(1)).findById(group.getGroupId());
+		verify(studentRepository, times(1)).saveAndFlush(student);
 	}
 	
 	@Test
@@ -53,10 +53,10 @@ public class StudentServiceImplTest {
 		student.setStudentName("Marck");
 		student.setStudentSurname("Golem");
 		
-		when(groupDao.findById(2L)).thenReturn(Optional.empty());
+		when(groupRepository.findById(2L)).thenReturn(Optional.empty());
 		studentService.saveStudent(student, 2L);
-		verify(groupDao, times(1)).findById(2L);
-		verify(studentDao, never()).saveAndFlush(student);
+		verify(groupRepository, times(1)).findById(2L);
+		verify(studentRepository, never()).saveAndFlush(student);
 	}
 	
 	

@@ -1,4 +1,4 @@
-package ua.foxminded.universitycms.dao;
+package ua.foxminded.universitycms.repository;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import ua.foxminded.universitycms.models.TimeTable;
 
 @Repository
-public interface TimeTableDao extends JpaRepository<TimeTable, Long> {
+public interface TimeTableRepository extends JpaRepository<TimeTable, Long> {
 	@Query("SELECT t FROM TimeTable t WHERE t.timeTableDate = :timeTableDate AND t.teacherId = :teacherId")
 	List<TimeTable> findTimeTableByTeacherForDay(
 			@Param("timeTableDate") LocalDate timeTableDate,

@@ -1,7 +1,6 @@
 package ua.foxminded.universitycms.service;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,38 +9,34 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.foxminded.universitycms.dao.CourseDao;
-import ua.foxminded.universitycms.dao.TeacherDao;
 import ua.foxminded.universitycms.models.Course;
 import ua.foxminded.universitycms.models.Teacher;
+import ua.foxminded.universitycms.repository.CourseRepository;
+import ua.foxminded.universitycms.repository.TeacherRepository;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
 	private static Logger logger = LoggerFactory.getLogger(TeacherServiceImpl.class);
 
-	private final TeacherDao teacherDao;
-	private final CourseDao courseDao;
+	private final TeacherRepository teacherRepository;
+	private final CourseRepository courseRepository;
 
-	public TeacherServiceImpl(TeacherDao teacherDao, CourseDao courseDao) {
-		this.teacherDao = teacherDao;
-		this.courseDao = courseDao;
+	public TeacherServiceImpl(TeacherRepository teacherRepository, CourseRepository courseRepository) {
+		this.teacherRepository = teacherRepository;
+		this.courseRepository = courseRepository;
 	}
 
 	@Override
 	public List<Teacher> getAllTeachers() {
-		List<Teacher> allTeachers = new ArrayList<>(teacherDao.findAll());
+		List<Teacher> allTeachers = teacherRepository.findAll();
 		logger.info("Getting all {} teachers from DB", allTeachers.size());
 		return allTeachers;
 	}
 
 	@Override
 	public Optional<Teacher> getTeacherById(Long teacherId) throws SQLException {
-		return teacherDao.findById(teacherId);
-	}
-	
-	@Override
-	public Optional<Teacher> getTeacherCourse(Long courseId) throws SQLException{
-		return teacherDao.findTeacherByCourseId(courseId);
+		logger.info("Getting teacher id = {} from DB", teacherId);
+		return teacherRepository.findById(teacherId);
 	}
 
 	@Override
@@ -49,30 +44,11 @@ public class TeacherServiceImpl implements TeacherService {
 	public void saveTeacherOnCourse(Teacher teacher, Course course) throws Exception, SQLException {
 		if (!teacher.getTeacherName().isEmpty() && !teacher.getTeacherSurname().isEmpty()) {
 			if (!course.getCourseName().isEmpty() && !course.getCourseDescription().isEmpty()) {
-				
-				
-				
-//				course.setTeacher(teacher);
-//				teacher.setCourse(course);
-//				courseDao.saveAndFlush(course);
-				courseDao.save(course);
+				courseRepository.save(course);
 				teacher.setCourse(course);
-				teacherDao.save(teacher);
-				logger.info("Save teacher {} and course {} into DB", teacher.getTeacherSurname(), course.getCourseName());
-//				 teacherDao.save(teacher);
-//				course.setTeacher(teacher);
-//				
-//				courseDao.save(course);
-//				 teacher.setCourse(course);
-//				 teacherDao.save(teacher);
-//				 System.out.println(teacher);
-//				 
-//				 System.out.println(course);
-//				 courseDao.saveAndFlush(course);
-//				 courseDao.saveAndFlush(course);
-//				 teacherDao.save(teacher);
-//				 courseDao.saveAndFlush(course);
-			//	 System.out.println(teacherDao.findTeacherByCourseId(course.getCourseId()));
+				teacherRepository.save(teacher);
+				logger.info("Save teacher {} and course {} into DB", teacher.getTeacherSurname(),
+						course.getCourseName());
 			} else {
 				logger.error("The course's name or description is empty",
 						new Exception("The course's name or description is empty"));
@@ -81,30 +57,12 @@ public class TeacherServiceImpl implements TeacherService {
 			logger.error("The teacher's name or surname is empty",
 					new Exception("The teacher's name or surname is empty"));
 		}
-	
-
-	// Optional<Course> course = courseDao.findById(courseId);
-//		System.out.println(teacherDao.findTeacherByCourseId(courseId));
-//		if(course.isPresent()) {
-//			if(!teacherDao.findTeacherByCourseId(courseId).isPresent()) {
-//				teacher.setCourse(course.get());
-////				course.get().setTeacher(teacher);
-//				teacherDao.save(teacher);
-////				courseDao.saveAndFlush(course.get());
-//				logger.info("Save teacher {} into DB", teacher.getTeacherSurname());
-//			} else {
-//				logger.error("The course with id = {} is taken by another teacher",
-//						courseId, new Exception("The course is taken by another teacher"));
-//			}
-//		} else {
-//			logger.error("The course with id = {} is not present from univesity",
-//					courseId, new Exception("The course is not present from univesity"));
-//		}
 	}
 
 	@Override
+	@Transactional
 	public void deleteTeacher(Long teacherId) throws SQLException {
-		teacherDao.deleteById(teacherId);
+		teacherRepository.deleteById(teacherId);
 		logger.info("Teacher Id = {} delete from DB", teacherId);
 	}
 }
