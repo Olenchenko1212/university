@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Teachers Page</title>
+</head>
+<body>
+	<h2>Teachers of University</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Teacher ID</th>
+				<th>Teacher Name</th>
+				<th>Teacher Surname</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="teacher : ${teachers}">
+				<td th:text="${teacher.teacherId}"></td>
+				<td th:text="${teacher.teacherName}"></td>
+				<td th:text="${teacher.teacherSurname}"></td>
+			</tr>
+		</tbody>
+	</table>
+	<a th:href="@{/menu}"> Back to Menu</a>
+</body>
+</html>

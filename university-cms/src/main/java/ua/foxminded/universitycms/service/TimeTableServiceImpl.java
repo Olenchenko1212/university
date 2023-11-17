@@ -65,6 +65,12 @@ public class TimeTableServiceImpl implements TimeTableService {
 			saveTimeTable(timeTable, groupId, teacherId);
 		}
 	}
+	
+	@Override
+	public void deleteTimeTable(Long timeTableId) {
+		timeTableRepository.deleteById(timeTableId);
+		logger.info("TimeTable Id = {} delete from DB", timeTableId);
+	}
 
 	@Override
 	public List<TimeTable> getTimeTableByDayForTeacher(LocalDate timeTableDate, Long teacherId) throws Exception {
@@ -116,7 +122,7 @@ public class TimeTableServiceImpl implements TimeTableService {
 					timeTable.getPairNumber());
 		} else {
 			logger.error("The group id = {} or teacher id = {} is not find in DB", groupId, teacherId,
-					new Exception("The student is not find in DB"));
+					new Exception("The group or teacher is not find in DB"));
 		}
 	}
 }

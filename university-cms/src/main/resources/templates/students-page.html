@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Students Page</title>
+</head>
+<body>
+	<h2>Students of University</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Student ID</th>
+				<th>Group ID</th>
+				<th>Student Name</th>
+				<th>Student Surname</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="student : ${students}">
+				<td th:text="${student.studentId}"></td>
+				<td th:text="${student.groupId}"></td>
+				<td th:text="${student.studentName}"></td>
+				<td th:text="${student.studentSurname}"></td>
+			</tr>
+		</tbody>
+	</table>
+	<a th:href="@{/menu}"> Back to Menu</a>
+</body>
+</html>

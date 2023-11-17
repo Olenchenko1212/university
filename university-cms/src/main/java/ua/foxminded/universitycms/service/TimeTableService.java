@@ -11,6 +11,7 @@ public interface TimeTableService {
 	List<TimeTable> getAllTimeTable() throws SQLException;
 	Optional<TimeTable> getTimeTableById(Long timeTableId) throws SQLException;
 	void saveEntrySchedule(TimeTable timeTable, Long groupId, Long teacherId) throws Exception;
+	void deleteTimeTable(Long timeTableId) throws SQLException;
 	List<TimeTable> getTimeTableByDayForTeacher(LocalDate timeTableDate, Long teacherId) throws Exception;
 	List<TimeTable> getTimeTableByDayForStudent(LocalDate timeTableDate, Long studentId) throws Exception;
 }

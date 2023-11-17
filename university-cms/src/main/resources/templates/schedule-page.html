@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Schedule Page</title>
+</head>
+<body>
+	<h2>Schedule of University</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>TimeTable ID</th>
+				<th>Pair Number</th>
+				<th>TimeTable Date</th>
+				<th>Group ID</th>
+				<th>Teacher ID</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="timeTable : ${timeTables}">
+				<td th:text="${timeTable.timeTableId}"></td>
+				<td th:text="${timeTable.pairNumber}"></td>
+				<td th:text="${timeTable.timeTableDate}"></td>
+				<td th:text="${timeTable.groupId}"></td>
+				<td th:text="${timeTable.teacherId}"></td>
+			</tr>
+		</tbody>
+	</table>
+	<a th:href="@{/menu}"> Back to Menu</a>
+</body>
+</html>

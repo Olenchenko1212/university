@@ -17,7 +17,7 @@ public class TimeTable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "timetable_id")
-	private Long timetableId;
+	private Long timeTableId;
 
 	@Column(name = "pair_number")
 	private int pairNumber;
@@ -42,8 +42,8 @@ public class TimeTable {
 	public TimeTable() {
 	}
 
-	public TimeTable(Long timetableId, int pairNumber, LocalDate timeTableDate, Long groupId, Long teacherId) {
-		this.timetableId = timetableId;
+	public TimeTable(Long timeTableId, int pairNumber, LocalDate timeTableDate, Long groupId, Long teacherId) {
+		this.timeTableId = timeTableId;
 		this.pairNumber = pairNumber;
 		this.timeTableDate = timeTableDate;
 		this.groupId = groupId;
@@ -52,7 +52,7 @@ public class TimeTable {
 
 	@Override
 	public String toString() {
-		return "TimeTable [timetableId=" + timetableId + ", pairNumber=" + pairNumber + ", timeTableDate="
+		return "TimeTable [timetableId=" + timeTableId + ", pairNumber=" + pairNumber + ", timeTableDate="
 				+ timeTableDate + ", groupId=" + groupId + ", teacherId=" + teacherId + "]";
 	}
 
@@ -64,7 +64,7 @@ public class TimeTable {
 		result = prime * result + pairNumber;
 		result = prime * result + ((teacherId == null) ? 0 : teacherId.hashCode());
 		result = prime * result + ((timeTableDate == null) ? 0 : timeTableDate.hashCode());
-		result = prime * result + ((timetableId == null) ? 0 : timetableId.hashCode());
+		result = prime * result + ((timeTableId == null) ? 0 : timeTableId.hashCode());
 		return result;
 	}
 
@@ -104,22 +104,22 @@ public class TimeTable {
 		} else if (!timeTableDate.equals(other.timeTableDate)) {
 			return false;
 		}
-		if (timetableId == null) {
-			if (other.timetableId != null) {
+		if (timeTableId == null) {
+			if (other.timeTableId != null) {
 				return false;
 			}
-		} else if (!timetableId.equals(other.timetableId)) {
+		} else if (!timeTableId.equals(other.timeTableId)) {
 			return false;
 		}
 		return true;
 	}
 
-	public Long getTimetableId() {
-		return timetableId;
+	public Long getTimeTableId() {
+		return timeTableId;
 	}
 
-	public void setTimetableId(Long timetableId) {
-		this.timetableId = timetableId;
+	public void setTimeTableId(Long timeTableId) {
+		this.timeTableId = timeTableId;
 	}
 
 	public int getPairNumber() {

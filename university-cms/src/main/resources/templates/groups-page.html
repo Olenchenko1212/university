@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Groups Page</title>
+</head>
+<body>
+	<h2>Groups of University</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Group ID</th>
+				<th>Group Name</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="group : ${groups}">
+				<td th:text="${group.groupId}"></td>
+				<td th:text="${group.groupName}"></td>
+			</tr>
+		</tbody>
+	</table>
+	<a th:href="@{/menu}"> Back to Menu</a>
+</body>
+</html>
