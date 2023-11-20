@@ -40,7 +40,7 @@ public class GroupControllerTest {
 		groups.add(new Group(2L, "gh-47"));
 
 		when(groupService.getAllGroups()).thenReturn(groups);
-		mockMvc.perform(get("/groups-page")).andExpect(status().isOk()).andExpect(view().name("groups-page"))
+		mockMvc.perform(get("/groups-page/allGroups")).andExpect(status().isOk()).andExpect(view().name("groups-page"))
 				.andExpect(model().attributeExists("groups")).andExpect(model().attribute("groups", groups))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(containsString("df-23")))
@@ -53,7 +53,7 @@ public class GroupControllerTest {
 		List<Group> groups = new ArrayList<>();
 
 		when(groupService.getAllGroups()).thenReturn(groups);
-		mockMvc.perform(get("/groups-page")).andExpect(status().isOk()).andExpect(view().name("groups-page"))
+		mockMvc.perform(get("/groups-page/allGroups")).andExpect(status().isOk()).andExpect(view().name("groups-page"))
 				.andExpect(model().attributeExists("groups")).andExpect(model().attribute("groups", empty()))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(not(containsString("df-23"))))

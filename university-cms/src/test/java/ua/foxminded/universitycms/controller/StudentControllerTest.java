@@ -40,7 +40,7 @@ public class StudentControllerTest {
 		students.add(new Student(2L, 3L, "Jane", "Smith"));
 
 		when(studentService.getAllStudents()).thenReturn(students);
-		mockMvc.perform(get("/students-page")).andExpect(status().isOk()).andExpect(view().name("students-page"))
+		mockMvc.perform(get("/students-page/allStudents")).andExpect(status().isOk()).andExpect(view().name("students-page"))
 				.andExpect(model().attributeExists("students")).andExpect(model().attribute("students", students))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(containsString("Doe")))
@@ -53,7 +53,7 @@ public class StudentControllerTest {
 		List<Student> students = new ArrayList<>();
 
 		when(studentService.getAllStudents()).thenReturn(students);
-		mockMvc.perform(get("/students-page")).andExpect(status().isOk()).andExpect(view().name("students-page"))
+		mockMvc.perform(get("/students-page/allStudents")).andExpect(status().isOk()).andExpect(view().name("students-page"))
 				.andExpect(model().attributeExists("students")).andExpect(model().attribute("students", empty()))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(not(containsString("Doe"))))

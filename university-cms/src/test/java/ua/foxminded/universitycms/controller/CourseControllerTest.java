@@ -39,7 +39,7 @@ class CourseControllerTest {
 		courses.add(new Course(2L, "History", "Introduction to World History"));
 
 		when(courseService.getAllCourses()).thenReturn(courses);
-		mockMvc.perform(get("/courses-page")).andExpect(status().isOk()).andExpect(view().name("courses-page"))
+		mockMvc.perform(get("/courses-page/allCourses")).andExpect(status().isOk()).andExpect(view().name("courses-page"))
 				.andExpect(model().attributeExists("courses")).andExpect(model().attribute("courses", courses))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(containsString("Mathematics")))
@@ -52,7 +52,7 @@ class CourseControllerTest {
 		List<Course> courses = new ArrayList<>();
 
 		when(courseService.getAllCourses()).thenReturn(courses);
-		mockMvc.perform(get("/courses-page")).andExpect(status().isOk()).andExpect(view().name("courses-page"))
+		mockMvc.perform(get("/courses-page/allCourses")).andExpect(status().isOk()).andExpect(view().name("courses-page"))
 				.andExpect(model().attributeExists("courses")).andExpect(model().attribute("courses", empty()))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(not(containsString("Mathematics"))))

@@ -40,7 +40,7 @@ public class TeacherControllerTest {
 		teachers.add(new Teacher(2L, "David", "Davis"));
 
 		when(teacherService.getAllTeachers()).thenReturn(teachers);
-		mockMvc.perform(get("/teachers-page")).andExpect(status().isOk()).andExpect(view().name("teachers-page"))
+		mockMvc.perform(get("/teachers-page/allTeachers")).andExpect(status().isOk()).andExpect(view().name("teachers-page"))
 				.andExpect(model().attributeExists("teachers")).andExpect(model().attribute("teachers", teachers))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(containsString("Brown")))
@@ -53,7 +53,7 @@ public class TeacherControllerTest {
 		List<Teacher> teachers = new ArrayList<>();
 
 		when(teacherService.getAllTeachers()).thenReturn(teachers);
-		mockMvc.perform(get("/teachers-page")).andExpect(status().isOk()).andExpect(view().name("teachers-page"))
+		mockMvc.perform(get("/teachers-page/allTeachers")).andExpect(status().isOk()).andExpect(view().name("teachers-page"))
 				.andExpect(model().attributeExists("teachers")).andExpect(model().attribute("teachers", empty()))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(not(containsString("Brown"))))

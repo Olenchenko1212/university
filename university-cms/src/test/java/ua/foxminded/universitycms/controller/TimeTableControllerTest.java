@@ -41,7 +41,7 @@ public class TimeTableControllerTest {
 		timeTables.add(new TimeTable(2L, 3, LocalDate.of(2023, 05, 26), 5L, 6L));
 
 		when(timeTableService.getAllTimeTable()).thenReturn(timeTables);
-		mockMvc.perform(get("/schedule-page")).andExpect(status().isOk()).andExpect(view().name("schedule-page"))
+		mockMvc.perform(get("/schedule-page/generalSchedule")).andExpect(status().isOk()).andExpect(view().name("schedule-page"))
 				.andExpect(model().attributeExists("timeTables")).andExpect(model().attribute("timeTables", timeTables))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(containsString("2023-05-25")))
@@ -54,7 +54,7 @@ public class TimeTableControllerTest {
 		List<TimeTable> timeTables = new ArrayList<>();
 
 		when(timeTableService.getAllTimeTable()).thenReturn(timeTables);
-		mockMvc.perform(get("/schedule-page")).andExpect(status().isOk()).andExpect(view().name("schedule-page"))
+		mockMvc.perform(get("/schedule-page/generalSchedule")).andExpect(status().isOk()).andExpect(view().name("schedule-page"))
 				.andExpect(model().attributeExists("timeTables")).andExpect(model().attribute("timeTables", empty()))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(not(containsString("2023-05-25"))))
