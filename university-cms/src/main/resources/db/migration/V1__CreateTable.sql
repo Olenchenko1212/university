@@ -91,3 +91,51 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS university.course_group
     OWNER to postgres;
+--////////////////////////////////////////////////////
+CREATE TABLE IF NOT EXISTS university.users
+(
+    id bigint NOT NULL DEFAULT nextval('university.users_id_seq'::regclass),
+    user_name character(20) COLLATE pg_catalog."default" NOT NULL,
+    password character(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT users_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS university.users
+    OWNER to postgres;
+--///////////////////////////////////////////////////    
+CREATE TABLE IF NOT EXISTS university.roles
+(
+    id bigint NOT NULL DEFAULT nextval('university.rols_id_seq'::regclass),
+    name character(20) COLLATE pg_catalog."default",
+    CONSTRAINT rols_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS university.roles
+    OWNER to postgres;
+--///////////////////////////////////////////////////
+CREATE TABLE IF NOT EXISTS university.users_roles
+(
+    user_id bigint NOT NULL DEFAULT nextval('university.users_roles_user_id_seq'::regclass),
+    role_id bigint NOT NULL DEFAULT nextval('university.users_roles_roles_id_seq'::regclass),
+    CONSTRAINT users_roles_pkey PRIMARY KEY (user_id, role_id),
+    CONSTRAINT fk_role_id FOREIGN KEY (role_id)
+        REFERENCES university.roles (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+        NOT VALID,
+    CONSTRAINT fk_user_id FOREIGN KEY (user_id)
+        REFERENCES university.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS university.users_roles
+    OWNER to postgres;
+--//////////////////////////////////////////////////

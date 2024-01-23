@@ -123,6 +123,27 @@ BEGIN
   END IF;
 END $$;
 
+DO $$ 
+BEGIN 
+  IF NOT EXISTS (SELECT 1 FROM university.users) THEN
+	insert into university.users(id, user_name, password) values (1, 'user1', '$2a$10$bDV1tHmlNrAm5Ol1PcsnFeNKX8yXWXUgRgK7MLVbDHfoMB/Ds9dkS');
+	insert into university.users(id, user_name, password) values (2, 'user2', '$2a$10$lFbTpsAKnZLL7DDXONVLm.r76g4aRS9bpmJ0CI32V67xLeElMEZKy');
+ END IF;
+END $$;
 
+DO $$ 
+BEGIN 
+  IF NOT EXISTS (SELECT 1 FROM university.roles) THEN
+	insert into university.roles(id, name) values(1, 'ROLE_USER');
+	insert into university.roles(id, name) values(2, 'ROLE_ADMIN');
+ END IF;
+END $$;
 
+DO $$ 
+BEGIN 
+  IF NOT EXISTS (SELECT 1 FROM university.users_roles) THEN
+	insert into university.users_roles(user_id, role_id) values(1, 1);
+	insert into university.users_roles(user_id, role_id) values(2, 2);
+ END IF;
+END $$;
 

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport"
+			content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
+	<link rel="stylesheet" type="text/css"
+			th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    		integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+<title>Admin Panel</title>
+</head>
+<body style="max-width: 1000px; margin: 0 auto">
+
+	<h1 th:inline="text">
+		<span sec:authorize="isAuthenticated()">
+			<<< Username:<span sec:authentication="name"></span>
+			| Roles:<span sec:authentication="principal.authorities"></span>
+			|<a th:href="@{/logout}">Sign Out</a>
+		</span>
+	</h1>
+	<h2>Admin Panel</h2>
+	<table class="table table-hover table-responsive-xl">
+		<thead class="thead-light">
+			<tr>
+				<th scope="col">Index</th>
+				<th scope="col">User ID</th>
+				<th scope="col">User Name</th>
+				<th scope="col">Role</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="user, iStat : ${users}">
+				<td th:text="${iStat.index}"></td>
+				<td th:text="${user.id}"></td>
+				<td th:text="${user.username}"></td>
+				<td>
+					<table>
+						<tbody>
+							<tr th:each="role : ${user.roles}">
+								<td th:text="${role.name}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+				<td>
+					<span style="font-size: 2em; color: Mediumslateblue;  margin-left: 20px;; margin-right: 20px;">
+						<a th:href="@{'/admin-panel/edit-roles/' + ${user.id}}" class="fa-regular fa-pen-to-square icon-dark"></a>
+					</span>
+				</td>
+				<td>
+					<span style="font-size: 2em; color: Mediumslateblue;">
+						<a th:href="@{'/admin-panel/delete/' + ${user.id}}" class="fa-regular fa-trash-can icon-dark btn-delete"></a>
+					</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<a th:href="@{/menu}">to Menu</a>
+</body>
+</html>
