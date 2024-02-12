@@ -20,6 +20,8 @@ import ua.foxminded.universitycms.service.UserService;
 @RequestMapping("/admin-panel")
 public class AdminPanelController {
 	
+	private String REDIRECT_TO_ADMIN_PANEL = "redirect:/admin-panel";
+	
 	@Autowired
 	private UserService userService;
 	
@@ -36,7 +38,7 @@ public class AdminPanelController {
 	@GetMapping("/delete/{userId}")
 	public String deleteUser(@PathVariable("userId") Long userId) throws SQLException {
 		userService.deleteUser(userId);
-		return "redirect:/admin-panel";
+		return REDIRECT_TO_ADMIN_PANEL;
 	}
 	
 	@GetMapping("/edit-roles/{userId}")
@@ -51,6 +53,6 @@ public class AdminPanelController {
 	@PostMapping("/save")
 	public String saveRoles(User user) throws SQLException {
 		userService.updateUserRole(user);
-		return "redirect:/admin-panel";
+		return REDIRECT_TO_ADMIN_PANEL;
 	}
 }

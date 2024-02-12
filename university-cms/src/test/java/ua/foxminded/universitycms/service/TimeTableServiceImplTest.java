@@ -49,14 +49,14 @@ class TimeTableServiceImplTest {
 		group.setGroupId(1L);
 		group.setGroupName("ff-45");
 		Teacher teacher = new Teacher();
-		teacher.setTeacherId(11L);
+		teacher.setId(11L);
 		teacher.setTeacherName("Bob");
 		teacher.setTeacherSurname("Harvy");
 
-		when(timeTableRepository.findTimeTableByPairNumberAndDate(timeTable.getPairNumber(), timeTable.getTimeTableDate()))
+		when(timeTableRepository.findBytimeTableDateAndPairNumber(timeTable.getTimeTableDate(), timeTable.getPairNumber()))
 				.thenReturn(expectTimeTableForDayAndTime);
 		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
-		when(teacherRepository.findById(teacher.getTeacherId())).thenReturn(Optional.of(teacher));
+		when(teacherRepository.findById(teacher.getId())).thenReturn(Optional.of(teacher));
 		timeTableService.saveEntrySchedule(timeTable, 1L, 11L);
 		verify(timeTableRepository, times(1)).save(timeTable);
 	}
@@ -67,68 +67,91 @@ class TimeTableServiceImplTest {
 		timeTable.setPairNumber(3);
 		timeTable.setTimeTableDate(LocalDate.of(2023, 05, 25));
 		List<TimeTable> expectTimeTableForDayAndTime = new ArrayList<TimeTable>();
-		expectTimeTableForDayAndTime.add(new TimeTable(1L, 3, LocalDate.of(2023, 05, 25), 44L, 55L));
-		expectTimeTableForDayAndTime.add(new TimeTable(2L, 3, LocalDate.of(2023, 05, 25), 46L, 56L));
+		expectTimeTableForDayAndTime.add(new TimeTable(1L, 3, LocalDate.of(2023, 05, 25), 44L));
+		expectTimeTableForDayAndTime.add(new TimeTable(2L, 3, LocalDate.of(2023, 05, 25), 46L));
 		Group group = new Group();
 		group.setGroupId(1L);
 		group.setGroupName("ff-45");
-		Teacher teacher = new Teacher();
-		teacher.setTeacherId(11L);
-		teacher.setTeacherName("Bob");
-		teacher.setTeacherSurname("Harvy");
+		Teacher teacher1 = new Teacher();
+		teacher1.setId(11L);
+		teacher1.setTeacherName("Bob");
+		teacher1.setTeacherSurname("Harvy");
+		Teacher teacher2 = new Teacher();
+		teacher2.setId(15L);
+		teacher2.setTeacherName("Bob2");
+		teacher2.setTeacherSurname("Harvy2");
+		Teacher teacherSave = new Teacher();
+		teacherSave.setId(16L);
+		teacherSave.setTeacherName("Bob3");
+		teacherSave.setTeacherSurname("Harvy3");
+		expectTimeTableForDayAndTime.get(0).setTeacher(teacher1);
+		expectTimeTableForDayAndTime.get(1).setTeacher(teacher2);
 
-		when(timeTableRepository.findTimeTableByPairNumberAndDate(timeTable.getPairNumber(), timeTable.getTimeTableDate()))
-				.thenReturn(expectTimeTableForDayAndTime);
+		when(timeTableRepository.findBytimeTableDateAndPairNumber(timeTable.getTimeTableDate(), timeTable.getPairNumber()))
+				.thenReturn(expectTimeTableForDayAndTime);	
 		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
-		when(teacherRepository.findById(teacher.getTeacherId())).thenReturn(Optional.of(teacher));
-		timeTableService.saveEntrySchedule(timeTable, 1L, 11L);
+		when(teacherRepository.findById(teacherSave.getId())).thenReturn(Optional.of(teacherSave));
+		when(timeTableRepository.save(timeTable)).thenReturn(timeTable);
+		timeTableService.saveEntrySchedule(timeTable, 1L, 16L);
 		verify(timeTableRepository, times(1)).save(timeTable);
 	}
 
 	@Test
-	void whenSchedulByDayAndPairNumberArePresentButGroupAlreadyOnPairExpectSavingTimeTable() throws Exception {
+	void whenSchedulByDayAndPairNumberArePresentButGroupAlreadyOnPairExpectNotSavingTimeTable() throws Exception {
 		TimeTable timeTable = new TimeTable();
 		timeTable.setPairNumber(3);
 		timeTable.setTimeTableDate(LocalDate.of(2023, 05, 25));
 		List<TimeTable> expectTimeTableForDayAndTime = new ArrayList<TimeTable>();
-		expectTimeTableForDayAndTime.add(new TimeTable(1L, 3, LocalDate.of(2023, 05, 25), 44L, 55L));
-		expectTimeTableForDayAndTime.add(new TimeTable(2L, 3, LocalDate.of(2023, 05, 25), 1L, 56L));
+		expectTimeTableForDayAndTime.add(new TimeTable(1L, 3, LocalDate.of(2023, 05, 25), 44L));
+		expectTimeTableForDayAndTime.add(new TimeTable(2L, 3, LocalDate.of(2023, 05, 25), 1L));
 		Group group = new Group();
 		group.setGroupId(1L);
 		group.setGroupName("ff-45");
 		Teacher teacher = new Teacher();
-		teacher.setTeacherId(11L);
+		teacher.setId(11L);
 		teacher.setTeacherName("Bob");
 		teacher.setTeacherSurname("Harvy");
+		Teacher teacher2 = new Teacher();
+		teacher2.setId(15L);
+		teacher2.setTeacherName("Bob");
+		teacher2.setTeacherSurname("Harvy");	
+		expectTimeTableForDayAndTime.get(0).setTeacher(teacher2);
+		expectTimeTableForDayAndTime.get(1).setTeacher(teacher);
 
-		when(timeTableRepository.findTimeTableByPairNumberAndDate(timeTable.getPairNumber(), timeTable.getTimeTableDate()))
+		when(timeTableRepository.findBytimeTableDateAndPairNumber(timeTable.getTimeTableDate(), timeTable.getPairNumber()))
 				.thenReturn(expectTimeTableForDayAndTime);
 		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
-		when(teacherRepository.findById(teacher.getTeacherId())).thenReturn(Optional.of(teacher));
+		when(teacherRepository.findById(teacher.getId())).thenReturn(Optional.of(teacher));
 		timeTableService.saveEntrySchedule(timeTable, 1L, 11L);
 		verify(timeTableRepository, never()).save(timeTable);
 	}
 
 	@Test
-	void whenSchedulByDayAndPairNumberArePresentButTeacherAlreadyOnPairExpectSavingTimeTable() throws Exception {
+	void whenSchedulByDayAndPairNumberArePresentButTeacherAlreadyOnPairExpectNotSavingTimeTable() throws Exception {
 		TimeTable timeTable = new TimeTable();
 		timeTable.setPairNumber(3);
-		timeTable.setTimeTableDate(LocalDate.of(2023, 05, 25));
+		timeTable.setTimeTableDate(LocalDate.of(2023, 05, 25));	
 		List<TimeTable> expectTimeTableForDayAndTime = new ArrayList<TimeTable>();
-		expectTimeTableForDayAndTime.add(new TimeTable(1L, 3, LocalDate.of(2023, 05, 25), 44L, 55L));
-		expectTimeTableForDayAndTime.add(new TimeTable(2L, 3, LocalDate.of(2023, 05, 25), 46L, 11L));
+		expectTimeTableForDayAndTime.add(new TimeTable(1L, 3, LocalDate.of(2023, 05, 25), 44L));
+		expectTimeTableForDayAndTime.add(new TimeTable(2L, 3, LocalDate.of(2023, 05, 25), 46L));
 		Group group = new Group();
 		group.setGroupId(1L);
 		group.setGroupName("ff-45");
 		Teacher teacher = new Teacher();
-		teacher.setTeacherId(11L);
+		teacher.setId(11L);
 		teacher.setTeacherName("Bob");
 		teacher.setTeacherSurname("Harvy");
+		Teacher teacher2 = new Teacher();
+		teacher2.setId(15L);
+		teacher2.setTeacherName("Bob");
+		teacher2.setTeacherSurname("Harvy");	
+		expectTimeTableForDayAndTime.get(0).setTeacher(teacher2);
+		expectTimeTableForDayAndTime.get(1).setTeacher(teacher);
 
-		when(timeTableRepository.findTimeTableByPairNumberAndDate(timeTable.getPairNumber(), timeTable.getTimeTableDate()))
+		when(timeTableRepository.findBytimeTableDateAndPairNumber(timeTable.getTimeTableDate(), timeTable.getPairNumber()))
 				.thenReturn(expectTimeTableForDayAndTime);
 		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
-		when(teacherRepository.findById(teacher.getTeacherId())).thenReturn(Optional.of(teacher));
+		when(teacherRepository.findById(teacher.getId())).thenReturn(Optional.of(teacher));
 		timeTableService.saveEntrySchedule(timeTable, 1L, 11L);
 		verify(timeTableRepository, never()).save(timeTable);
 	}
@@ -141,14 +164,14 @@ class TimeTableServiceImplTest {
 		student.setStudentSurname("Murray");
 		student.setGroupId(2L);
 		List<TimeTable> expectTimeTableForStudent = new ArrayList<TimeTable>();
-		expectTimeTableForStudent.add(new TimeTable(1L, 3, LocalDate.of(2023, 05, 25), 2L, 55L));
-		expectTimeTableForStudent.add(new TimeTable(2L, 4, LocalDate.of(2023, 05, 25), 2L, 11L));
+		expectTimeTableForStudent.add(new TimeTable(1L, 3, LocalDate.of(2023, 05, 25), 2L));
+		expectTimeTableForStudent.add(new TimeTable(2L, 4, LocalDate.of(2023, 05, 25), 2L));
 		
 		when(studentRepository.findById(student.getStudentId())).thenReturn(Optional.of(student));
-		when(timeTableRepository.findTimeTableByGroupForDay(LocalDate.of(2023, 05, 25), student.getGroupId())).thenReturn(expectTimeTableForStudent);
+		when(timeTableRepository.findBytimeTableDateAndGroupId(LocalDate.of(2023, 05, 25), student.getGroupId())).thenReturn(expectTimeTableForStudent);
 		timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getStudentId());
 		verify(studentRepository, times(1)).findById(student.getStudentId());
-		verify(timeTableRepository, times(1)).findTimeTableByGroupForDay(LocalDate.of(2023, 05, 25), student.getGroupId());
+		verify(timeTableRepository, times(1)).findBytimeTableDateAndGroupId(LocalDate.of(2023, 05, 25), student.getGroupId());
 		assertEquals(expectTimeTableForStudent, timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getStudentId()));
 	}
 	
@@ -162,10 +185,10 @@ class TimeTableServiceImplTest {
 		List<TimeTable> expectTimeTableForStudent = new ArrayList<TimeTable>();
 
 		when(studentRepository.findById(student.getStudentId())).thenReturn(Optional.of(student));
-		when(timeTableRepository.findTimeTableByGroupForDay(LocalDate.of(2023, 05, 25), student.getGroupId())).thenReturn(expectTimeTableForStudent);
+		when(timeTableRepository.findBytimeTableDateAndGroupId(LocalDate.of(2023, 05, 25), student.getGroupId())).thenReturn(expectTimeTableForStudent);
 		timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getStudentId());
 		verify(studentRepository, times(1)).findById(student.getStudentId());
-		verify(timeTableRepository, times(1)).findTimeTableByGroupForDay(LocalDate.of(2023, 05, 25), student.getGroupId());
+		verify(timeTableRepository, times(1)).findBytimeTableDateAndGroupId(LocalDate.of(2023, 05, 25), student.getGroupId());
 		assertEquals(new ArrayList<TimeTable>(), timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getStudentId()));
 	}
 }

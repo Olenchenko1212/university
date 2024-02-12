@@ -32,6 +32,13 @@ public class TeacherServiceImpl implements TeacherService {
 		logger.info("Getting all {} teachers from DB", allTeachers.size());
 		return allTeachers;
 	}
+	
+	@Override
+	public List<Teacher> getFreeTeachers(){
+		List<Teacher> freeTeachers = teacherRepository.findAll();
+		logger.info("Getting all {} teachers from DB", freeTeachers.size());
+		return freeTeachers;
+	}
 
 	@Override
 	public Optional<Teacher> getTeacherById(Long teacherId) throws SQLException {

@@ -95,15 +95,15 @@ public class GroupServiceImplTest {
 		group.setGroupId(4L);
 		group.setGroupName("ff-45");
 		Course course = new Course();
-		course.setCourseId(5L);
+		course.setId(5L);
 		course.setCourseName("Philosophy");
 		course.setCourseDescription("Learn Philosophy very well");
 		
 		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
-		when(courseRepository.findById(course.getCourseId())).thenReturn(Optional.of(course));
-		groupService.saveEnrollGroupToCourse(group.getGroupId(), course.getCourseId());
+		when(courseRepository.findById(course.getId())).thenReturn(Optional.of(course));
+		groupService.saveEnrollGroupToCourse(group.getGroupId(), course.getId());
 		verify(groupRepository, times(1)).findById(group.getGroupId());
-		verify(courseRepository, times(1)).findById(course.getCourseId());
+		verify(courseRepository, times(1)).findById(course.getId());
 		verify(courseRepository, times(1)).save(course);
 	}
 	
@@ -113,15 +113,15 @@ public class GroupServiceImplTest {
 		group.setGroupId(4L);
 		group.setGroupName("ff-45");
 		Course course = new Course();
-		course.setCourseId(5L);
+		course.setId(5L);
 		course.setCourseName("Philosophy");
 		course.setCourseDescription("Learn Philosophy very well");
 		
 		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.empty());
-		when(courseRepository.findById(course.getCourseId())).thenReturn(Optional.empty());
-		groupService.saveEnrollGroupToCourse(group.getGroupId(), course.getCourseId());
+		when(courseRepository.findById(course.getId())).thenReturn(Optional.empty());
+		groupService.saveEnrollGroupToCourse(group.getGroupId(), course.getId());
 		verify(groupRepository, times(1)).findById(group.getGroupId());
-		verify(courseRepository, times(1)).findById(course.getCourseId());
+		verify(courseRepository, times(1)).findById(course.getId());
 		verify(courseRepository, never()).save(course);
 	}
 	
@@ -131,17 +131,17 @@ public class GroupServiceImplTest {
 		group.setGroupId(4L);
 		group.setGroupName("ff-45");
 		Course course = new Course();
-		course.setCourseId(5L);
+		course.setId(5L);
 		course.setCourseName("Philosophy");
 		course.setCourseDescription("Learn Philosophy very well");
 		course.getGroups().add(group);
 		group.getCourses().add(course);
 		
 		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
-		when(courseRepository.findById(course.getCourseId())).thenReturn(Optional.of(course));
-		groupService.saveEnrollGroupToCourse(group.getGroupId(), course.getCourseId());
+		when(courseRepository.findById(course.getId())).thenReturn(Optional.of(course));
+		groupService.saveEnrollGroupToCourse(group.getGroupId(), course.getId());
 		verify(groupRepository, times(1)).findById(group.getGroupId());
-		verify(courseRepository, times(1)).findById(course.getCourseId());
+		verify(courseRepository, times(1)).findById(course.getId());
 		verify(courseRepository, never()).save(course);
 	}
 	

@@ -74,7 +74,7 @@ public class GroupServiceImpl implements GroupService {
 		Optional<Course> course = courseRepository.findById(courseId);
 		if (group.isPresent() && course.isPresent()) {
 			Optional<Course> courseInGroup = group.get().getCourses().stream()
-					.filter(c -> c.getCourseId().equals(courseId)).findFirst();
+					.filter(c -> c.getId().equals(courseId)).findFirst();
 			if (!courseInGroup.isPresent()) {
 				course.get().getGroups().add(group.get());
 				group.get().getCourses().add(course.get());

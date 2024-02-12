@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -22,8 +21,8 @@ public class Teacher {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "teacher_id")
-	private Long teacherId;
+	@Column(name = "id")
+	private Long id;
 
 	@Column(name = "teacher_name")
 	private String teacherName;
@@ -31,9 +30,8 @@ public class Teacher {
 	@Column(name = "teacher_surname")
 	private String teacherSurname;
 
-	@OneToOne(mappedBy = "teacher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@MapsId
-	@JoinColumn(name = "teacher_id")
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "course_id", referencedColumnName = "id")
 	private Course course;
 	
 	@OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -42,15 +40,15 @@ public class Teacher {
 	public Teacher() {
 	}
 
-	public Teacher(Long teacherId, String teacherName, String teacherSurname) {
-		this.teacherId = teacherId;
+	public Teacher(Long id, String teacherName, String teacherSurname) {
+		this.id = id;
 		this.teacherName = teacherName;
 		this.teacherSurname = teacherSurname;
 	}
 
 	@Override
 	public String toString() {
-		return "Teacher [teacherId=" + teacherId + ", teacherName=" + teacherName.trim() + ", teacherSurname="
+		return "Teacher [teacherId=" + id + ", teacherName=" + teacherName.trim() + ", teacherSurname="
 				+ teacherSurname.trim() + "]";
 	}
 
@@ -59,7 +57,7 @@ public class Teacher {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((course == null) ? 0 : course.hashCode());
-		result = prime * result + ((teacherId == null) ? 0 : teacherId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((teacherName == null) ? 0 : teacherName.hashCode());
 		result = prime * result + ((teacherSurname == null) ? 0 : teacherSurname.hashCode());
 		return result;
@@ -84,11 +82,11 @@ public class Teacher {
 		} else if (!course.equals(other.course)) {
 			return false;
 		}
-		if (teacherId == null) {
-			if (other.teacherId != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!teacherId.equals(other.teacherId)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		if (teacherName == null) {
@@ -108,14 +106,13 @@ public class Teacher {
 		return true;
 	}
 
-	public Long getTeacherId() {
-		return teacherId;
+	public Long getId() {
+		return id;
 	}
 
-	public void setTeacherId(Long teacherId) {
-		this.teacherId = teacherId;
+	public void setId(Long id) {
+		this.id = id;
 	}
-
 
 	public String getTeacherName() {
 		return teacherName;
@@ -139,5 +136,13 @@ public class Teacher {
 
 	public void setCourse(Course course) {
 		this.course = course;
+	}
+
+	public List<TimeTable> getTimeTable() {
+		return timeTable;
+	}
+
+	public void setTimeTable(List<TimeTable> timeTable) {
+		this.timeTable = timeTable;
 	}
 }

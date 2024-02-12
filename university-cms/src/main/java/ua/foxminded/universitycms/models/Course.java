@@ -3,10 +3,8 @@ package ua.foxminded.universitycms.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
@@ -23,8 +20,8 @@ public class Course {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "course_id")
-	private Long courseId;
+	@Column(name = "id")
+	private Long id;
 
 	@Column(name = "course_name")
 	private String courseName;
@@ -32,8 +29,7 @@ public class Course {
 	@Column(name = "course_description")
 	private String courseDescription;
 
-	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@PrimaryKeyJoinColumn
+	@OneToOne(mappedBy = "course")
 	private Teacher teacher;
 
 	@ManyToMany
@@ -44,8 +40,8 @@ public class Course {
 		groups = new ArrayList<>();
 	}
 
-	public Course(Long courseId, String courseName, String courseDescription) {
-		this.courseId = courseId;
+	public Course(Long id, String courseName, String courseDescription) {
+		this.id = id;
 		this.courseName = courseName;
 		this.courseDescription = courseDescription;
 		groups = new ArrayList<>();
@@ -53,7 +49,7 @@ public class Course {
 
 	@Override
 	public String toString() {
-		return "Course [courseId=" + courseId + ", courseName=" + courseName.trim() + ", courseDescription="
+		return "Course [courseId=" + id + ", courseName=" + courseName.trim() + ", courseDescription="
 				+ courseDescription.trim() + "]";
 	}
 
@@ -62,7 +58,7 @@ public class Course {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((courseDescription == null) ? 0 : courseDescription.hashCode());
-		result = prime * result + ((courseId == null) ? 0 : courseId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((courseName == null) ? 0 : courseName.hashCode());
 		result = prime * result + ((groups == null) ? 0 : groups.hashCode());
 		result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
@@ -88,11 +84,11 @@ public class Course {
 		} else if (!courseDescription.equals(other.courseDescription)) {
 			return false;
 		}
-		if (courseId == null) {
-			if (other.courseId != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!courseId.equals(other.courseId)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		if (courseName == null) {
@@ -119,31 +115,34 @@ public class Course {
 		return true;
 	}
 
-	public Long getCourseId() {
-		return courseId;
+	public Long getId() {
+		return id;
 	}
 
-	public void setCourseId(Long courseId) {
-		this.courseId = courseId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getCourseName() {
-		return courseName;
+		return courseName.trim();
 	}
 
 	public void setCourseName(String courseName) {
-		this.courseName = courseName;
+		this.courseName = courseName.trim();
 	}
 
 	public String getCourseDescription() {
-		return courseDescription;
+		return courseDescription.trim();
 	}
 
 	public void setCourseDescription(String courseDescription) {
-		this.courseDescription = courseDescription;
+		this.courseDescription = courseDescription.trim();
 	}
 
 	public Teacher getTeacher() {
+		if(teacher == null) {
+			return new Teacher();
+		}
 		return teacher;
 	}
 

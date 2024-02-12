@@ -5,26 +5,17 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import ua.foxminded.universitycms.models.Teacher;
 import ua.foxminded.universitycms.models.TimeTable;
 
 @Repository
 public interface TimeTableRepository extends JpaRepository<TimeTable, Long> {
-	@Query("SELECT t FROM TimeTable t WHERE t.timeTableDate = :timeTableDate AND t.teacherId = :teacherId")
-	List<TimeTable> findTimeTableByTeacherForDay(
-			@Param("timeTableDate") LocalDate timeTableDate,
-			@Param("teacherId") Long teacherId) throws SQLException;
 	
-	@Query("SELECT t FROM TimeTable t WHERE t.timeTableDate = :timeTableDate AND t.groupId = :groupId")
-	List<TimeTable> findTimeTableByGroupForDay(
-			@Param("timeTableDate") LocalDate timeTableDate,
-			@Param("groupId") Long groupId) throws SQLException;
-	
-	@Query("SELECT t FROM TimeTable t WHERE t.pairNumber = :pairNumber AND t.timeTableDate = :timeTableDate")
-	List<TimeTable> findTimeTableByPairNumberAndDate(
-			@Param("pairNumber") int pairNumber,
-			@Param("timeTableDate") LocalDate timeTableDate) throws SQLException;
+	List<TimeTable> findBytimeTableDateAndTeacher(LocalDate timeTableDate, Teacher teacher) throws SQLException;
+
+	List<TimeTable> findBytimeTableDateAndGroupId(LocalDate timeTableDate, Long groupId) throws SQLException;
+
+	List<TimeTable> findBytimeTableDateAndPairNumber(LocalDate timeTableDate, int pairNumber) throws SQLException;
 }

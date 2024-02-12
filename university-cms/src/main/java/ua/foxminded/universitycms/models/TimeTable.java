@@ -28,9 +28,6 @@ public class TimeTable {
 	@Column(name = "group_id", insertable = false, updatable = false)
 	private Long groupId;
 
-	@Column(name = "teacher_id", insertable = false, updatable = false)
-	private Long teacherId;
-
 	@ManyToOne
 	@JoinColumn(name = "group_id")
 	private Group group;
@@ -42,27 +39,27 @@ public class TimeTable {
 	public TimeTable() {
 	}
 
-	public TimeTable(Long timeTableId, int pairNumber, LocalDate timeTableDate, Long groupId, Long teacherId) {
+	public TimeTable(Long timeTableId, int pairNumber, LocalDate timeTableDate, Long groupId) {
 		this.timeTableId = timeTableId;
 		this.pairNumber = pairNumber;
 		this.timeTableDate = timeTableDate;
 		this.groupId = groupId;
-		this.teacherId = teacherId;
 	}
 
 	@Override
 	public String toString() {
 		return "TimeTable [timetableId=" + timeTableId + ", pairNumber=" + pairNumber + ", timeTableDate="
-				+ timeTableDate + ", groupId=" + groupId + ", teacherId=" + teacherId + "]";
+				+ timeTableDate + ", groupId=" + groupId + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((group == null) ? 0 : group.hashCode());
 		result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
 		result = prime * result + pairNumber;
-		result = prime * result + ((teacherId == null) ? 0 : teacherId.hashCode());
+		result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
 		result = prime * result + ((timeTableDate == null) ? 0 : timeTableDate.hashCode());
 		result = prime * result + ((timeTableId == null) ? 0 : timeTableId.hashCode());
 		return result;
@@ -80,6 +77,13 @@ public class TimeTable {
 			return false;
 		}
 		TimeTable other = (TimeTable) obj;
+		if (group == null) {
+			if (other.group != null) {
+				return false;
+			}
+		} else if (!group.equals(other.group)) {
+			return false;
+		}
 		if (groupId == null) {
 			if (other.groupId != null) {
 				return false;
@@ -90,11 +94,11 @@ public class TimeTable {
 		if (pairNumber != other.pairNumber) {
 			return false;
 		}
-		if (teacherId == null) {
-			if (other.teacherId != null) {
+		if (teacher == null) {
+			if (other.teacher != null) {
 				return false;
 			}
-		} else if (!teacherId.equals(other.teacherId)) {
+		} else if (!teacher.equals(other.teacher)) {
 			return false;
 		}
 		if (timeTableDate == null) {
@@ -144,14 +148,6 @@ public class TimeTable {
 
 	public void setGroupId(Long groupId) {
 		this.groupId = groupId;
-	}
-
-	public Long getTeacherId() {
-		return teacherId;
-	}
-
-	public void setTeacherId(Long teacherId) {
-		this.teacherId = teacherId;
 	}
 
 	public Group getGroup() {

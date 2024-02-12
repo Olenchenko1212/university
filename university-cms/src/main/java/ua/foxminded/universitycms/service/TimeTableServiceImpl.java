@@ -55,14 +55,16 @@ public class TimeTableServiceImpl implements TimeTableService {
 	@Transactional
 	public void saveEntrySchedule(TimeTable timeTable, Long groupId, Long teacherId) throws Exception {
 		List<TimeTable> timeTableByPairAndDate = timeTableRepository
-				.findTimeTableByPairNumberAndDate(timeTable.getPairNumber(), timeTable.getTimeTableDate());
+				.findBytimeTableDateAndPairNumber(timeTable.getTimeTableDate(), timeTable.getPairNumber());
 		if (!timeTableByPairAndDate.isEmpty()) {
 			if (isNotPresentScheduleByGroup(timeTableByPairAndDate, groupId)
 					&& isNotPresentScheduleByTeacher(timeTableByPairAndDate, teacherId)) {
 				saveTimeTable(timeTable, groupId, teacherId);
+				logger.info("SAVE TimeTable Id = {} for not free time", timeTable.getTimeTableId());
 			}
 		} else {
 			saveTimeTable(timeTable, groupId, teacherId);
+			logger.info("SAVE TimeTable Id = {} for free time", timeTable.getTimeTableId());
 		}
 	}
 	
@@ -75,7 +77,8 @@ public class TimeTableServiceImpl implements TimeTableService {
 	@Override
 	public List<TimeTable> getTimeTableByDayForTeacher(LocalDate timeTableDate, Long teacherId) throws Exception {
 		logger.info("Take timeTable by Day = {} for teacher id = {}", timeTableDate, teacherId);
-		return timeTableRepository.findTimeTableByTeacherForDay(timeTableDate, teacherId);
+		Optional<Teacher> teacher = teacherRepository.findById(teacherId);
+		return timeTableRepository.findBytimeTableDateAndTeacher(timeTableDate, teacher.get());
 	}
 
 	@Override
@@ -83,7 +86,7 @@ public class TimeTableServiceImpl implements TimeTableService {
 		List<TimeTable> timeTableByDayForStudent = new ArrayList<TimeTable>();
 		Optional<Student> student = studentRepository.findById(studentId);
 		if (student.isPresent()) {
-			timeTableByDayForStudent = timeTableRepository.findTimeTableByGroupForDay(timeTableDate,
+			timeTableByDayForStudent = timeTableRepository.findBytimeTableDateAndGroupId(timeTableDate,
 					student.get().getGroupId());
 			logger.info("Take timeTable for student id = {}", studentId);
 		} else {
@@ -94,7 +97,7 @@ public class TimeTableServiceImpl implements TimeTableService {
 	}
 
 	private boolean isNotPresentScheduleByTeacher(List<TimeTable> timeTableByPairAndDate, Long teacherId) {
-		boolean isPresent = timeTableByPairAndDate.stream().anyMatch(t -> t.getTeacherId().equals(teacherId));
+		boolean isPresent = timeTableByPairAndDate.stream().anyMatch(t -> t.getTeacher().getId().equals(teacherId));
 		if (isPresent) {
 			logger.error("The TimeTable by teacher id = {} is already existing for this time", teacherId,
 					new Exception("The TimeTable by teacher is already existing for this time"));

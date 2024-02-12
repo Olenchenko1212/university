@@ -3,7 +3,6 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	xmlns:th="http://www.thymeleaf.org">
 <head>
-
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport"
 			content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
@@ -15,11 +14,9 @@
     		crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
 	<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-
 <title>Admin Panel</title>
 </head>
 <body style="max-width: 1000px; margin: 0 auto">
-
 	<h1 th:inline="text">
 		<span sec:authorize="isAuthenticated()">
 			<<< Username:<span sec:authentication="name"></span>

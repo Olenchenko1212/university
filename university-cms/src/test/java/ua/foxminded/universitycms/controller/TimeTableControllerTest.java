@@ -37,8 +37,8 @@ public class TimeTableControllerTest {
 	void whenGetScheduleNotEmptyExpectScheduleViewWithTwoTimeTable() throws Exception {
 
 		List<TimeTable> timeTables = new ArrayList<>();
-		timeTables.add(new TimeTable(1L, 2, LocalDate.of(2023, 05, 25), 3L, 4L));
-		timeTables.add(new TimeTable(2L, 3, LocalDate.of(2023, 05, 26), 5L, 6L));
+		timeTables.add(new TimeTable(1L, 2, LocalDate.of(2023, 05, 25), 3L));
+		timeTables.add(new TimeTable(2L, 3, LocalDate.of(2023, 05, 26), 5L));
 
 		when(timeTableService.getAllTimeTable()).thenReturn(timeTables);
 		mockMvc.perform(get("/schedule-page/generalSchedule")).andExpect(status().isOk()).andExpect(view().name("schedule-page"))
