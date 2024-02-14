@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 @Import({ConfigSecurity.class, CustomUserDetailsService.class})
 @WebMvcTest(controllers = CourseController.class)
 class CourseControllerTest {
@@ -44,17 +43,14 @@ class CourseControllerTest {
 	private MockMvc mockMvc;
 	
 	@MockBean
-	private CustomUserDetailsService customUserDetailsService;
-	
+	private CustomUserDetailsService customUserDetailsService;	
 	@MockBean
 	private CustomSuccessHandler successHandler;
 
 	@MockBean
 	private CourseService courseService;
-	
 	@MockBean
 	private TeacherService teacherService;
-	
 	@MockBean
 	private GroupService groupService;
 

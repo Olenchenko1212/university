@@ -1,11 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <title>Groups Page</title>
 </head>
-<body>
+<body style="max-width: 1000px; margin: 0 auto">
+	<h1 th:inline="text">
+		<span sec:authorize="isAuthenticated()">
+			<<< Username:<span sec:authentication="name"></span>
+			| Roles:<span sec:authentication="principal.authorities"></span>
+			|<a th:href="@{/logout}">Sign Out</a>
+		</span>
+	</h1>
 	<h2>Groups of University</h2>
+	<a sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STUFF')" th:href="@{/groups-page/new}">Add a new group</a>
 	<table>
 		<thead>
 			<tr>
@@ -15,11 +26,24 @@
 		</thead>
 		<tbody>
 			<tr th:each="group : ${groups}">
-				<td th:text="${group.groupId}"></td>
+				<td th:text="${group.id}"></td>
 				<td th:text="${group.groupName}"></td>
+				<td sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STUFF')">
+					<span style="font-size: 2em; color: Mediumslateblue; margin-right: 10px;" class="material-symbols-outlined">
+						<a style="text-decoration: none;" th:href="@{'/groups-page/edit/' + ${group.id}}">edit</a>
+					</span>
+				</td>
+				<td sec:authorize="hasRole('ROLE_ADMIN')">
+					<span style="font-size: 2em; color: Mediumslateblue;" class="material-symbols-outlined">
+						<a style="text-decoration: none;" th:href="@{'/groups-page/delete/' + ${group.id}}">delete</a>
+					</span>
+				</td>
 			</tr>
 		</tbody>
 	</table>
 	<a th:href="@{/menu}"> Back to Menu</a>
+	<div style="text-align: center;" sec:authorize="hasRole('ROLE_ADMIN')">
+  		<a th:href="@{/admin-panel}"> to Admin-panel</a>
+	</div>
 </body>
 </html>

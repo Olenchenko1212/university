@@ -36,12 +36,12 @@ public class StudentServiceImplTest {
 		student.setStudentName("Marck");
 		student.setStudentSurname("Bry");
 		Group group = new Group();
-		group.setGroupId(1L);
+		group.setId(1L);
 		group.setGroupName("hh-23");
 		
-		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
+		when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
 		studentService.saveStudent(student, 1L);
-		verify(groupRepository, times(1)).findById(group.getGroupId());
+		verify(groupRepository, times(1)).findById(group.getId());
 		verify(studentRepository, times(1)).saveAndFlush(student);
 	}
 	

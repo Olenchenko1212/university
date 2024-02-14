@@ -46,7 +46,7 @@ class TimeTableServiceImplTest {
 		timeTable.setTimeTableDate(LocalDate.of(2023, 05, 25));
 		List<TimeTable> expectTimeTableForDayAndTime = new ArrayList<TimeTable>();
 		Group group = new Group();
-		group.setGroupId(1L);
+		group.setId(1L);
 		group.setGroupName("ff-45");
 		Teacher teacher = new Teacher();
 		teacher.setId(11L);
@@ -55,7 +55,7 @@ class TimeTableServiceImplTest {
 
 		when(timeTableRepository.findBytimeTableDateAndPairNumber(timeTable.getTimeTableDate(), timeTable.getPairNumber()))
 				.thenReturn(expectTimeTableForDayAndTime);
-		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
+		when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
 		when(teacherRepository.findById(teacher.getId())).thenReturn(Optional.of(teacher));
 		timeTableService.saveEntrySchedule(timeTable, 1L, 11L);
 		verify(timeTableRepository, times(1)).save(timeTable);
@@ -70,7 +70,7 @@ class TimeTableServiceImplTest {
 		expectTimeTableForDayAndTime.add(new TimeTable(1L, 3, LocalDate.of(2023, 05, 25), 44L));
 		expectTimeTableForDayAndTime.add(new TimeTable(2L, 3, LocalDate.of(2023, 05, 25), 46L));
 		Group group = new Group();
-		group.setGroupId(1L);
+		group.setId(1L);
 		group.setGroupName("ff-45");
 		Teacher teacher1 = new Teacher();
 		teacher1.setId(11L);
@@ -89,7 +89,7 @@ class TimeTableServiceImplTest {
 
 		when(timeTableRepository.findBytimeTableDateAndPairNumber(timeTable.getTimeTableDate(), timeTable.getPairNumber()))
 				.thenReturn(expectTimeTableForDayAndTime);	
-		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
+		when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
 		when(teacherRepository.findById(teacherSave.getId())).thenReturn(Optional.of(teacherSave));
 		when(timeTableRepository.save(timeTable)).thenReturn(timeTable);
 		timeTableService.saveEntrySchedule(timeTable, 1L, 16L);
@@ -105,7 +105,7 @@ class TimeTableServiceImplTest {
 		expectTimeTableForDayAndTime.add(new TimeTable(1L, 3, LocalDate.of(2023, 05, 25), 44L));
 		expectTimeTableForDayAndTime.add(new TimeTable(2L, 3, LocalDate.of(2023, 05, 25), 1L));
 		Group group = new Group();
-		group.setGroupId(1L);
+		group.setId(1L);
 		group.setGroupName("ff-45");
 		Teacher teacher = new Teacher();
 		teacher.setId(11L);
@@ -120,7 +120,7 @@ class TimeTableServiceImplTest {
 
 		when(timeTableRepository.findBytimeTableDateAndPairNumber(timeTable.getTimeTableDate(), timeTable.getPairNumber()))
 				.thenReturn(expectTimeTableForDayAndTime);
-		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
+		when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
 		when(teacherRepository.findById(teacher.getId())).thenReturn(Optional.of(teacher));
 		timeTableService.saveEntrySchedule(timeTable, 1L, 11L);
 		verify(timeTableRepository, never()).save(timeTable);
@@ -135,7 +135,7 @@ class TimeTableServiceImplTest {
 		expectTimeTableForDayAndTime.add(new TimeTable(1L, 3, LocalDate.of(2023, 05, 25), 44L));
 		expectTimeTableForDayAndTime.add(new TimeTable(2L, 3, LocalDate.of(2023, 05, 25), 46L));
 		Group group = new Group();
-		group.setGroupId(1L);
+		group.setId(1L);
 		group.setGroupName("ff-45");
 		Teacher teacher = new Teacher();
 		teacher.setId(11L);
@@ -150,7 +150,7 @@ class TimeTableServiceImplTest {
 
 		when(timeTableRepository.findBytimeTableDateAndPairNumber(timeTable.getTimeTableDate(), timeTable.getPairNumber()))
 				.thenReturn(expectTimeTableForDayAndTime);
-		when(groupRepository.findById(group.getGroupId())).thenReturn(Optional.of(group));
+		when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
 		when(teacherRepository.findById(teacher.getId())).thenReturn(Optional.of(teacher));
 		timeTableService.saveEntrySchedule(timeTable, 1L, 11L);
 		verify(timeTableRepository, never()).save(timeTable);

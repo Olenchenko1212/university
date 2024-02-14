@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -20,8 +22,8 @@ public class Group {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "group_id")
-	private Long groupId;
+	@Column(name = "id")
+	private Long id;
 
 	@Column(name = "group_name")
 	private String groupName;
@@ -29,9 +31,11 @@ public class Group {
 	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Student> students = new ArrayList<>();
 
-	@ManyToMany(mappedBy = "groups", cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
+			CascadeType.REFRESH })
+	@JoinTable(name = "university.course_group", joinColumns = @JoinColumn(name = "group_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
 	private List<Course> courses;
-	
+
 	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<TimeTable> timeTable = new ArrayList<>();
 
@@ -39,15 +43,15 @@ public class Group {
 		courses = new ArrayList<>();
 	}
 
-	public Group(Long groupId, String groupName) {
-		this.groupId = groupId;
+	public Group(Long id, String groupName) {
+		this.id = id;
 		this.groupName = groupName;
 		courses = new ArrayList<>();
 	}
 
 	@Override
 	public String toString() {
-		return "Group [groupId=" + groupId + ", groupName=" + groupName.trim() + "]";
+		return "Group [groupId=" + id + ", groupName=" + groupName.trim() + "]";
 	}
 
 	@Override
@@ -55,7 +59,7 @@ public class Group {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((courses == null) ? 0 : courses.hashCode());
-		result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((groupName == null) ? 0 : groupName.hashCode());
 		result = prime * result + ((students == null) ? 0 : students.hashCode());
 		return result;
@@ -80,11 +84,11 @@ public class Group {
 		} else if (!courses.equals(other.courses)) {
 			return false;
 		}
-		if (groupId == null) {
-			if (other.groupId != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!groupId.equals(other.groupId)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		if (groupName == null) {
@@ -104,12 +108,12 @@ public class Group {
 		return true;
 	}
 
-	public Long getGroupId() {
-		return groupId;
+	public Long getId() {
+		return id;
 	}
 
-	public void setGroupId(Long groupId) {
-		this.groupId = groupId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getGroupName() {
