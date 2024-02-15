@@ -16,7 +16,7 @@
 		</span>
 	</h1>
 	<h2>Groups of University</h2>
-	<a sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STUFF')" th:href="@{/groups-page/new}">Add a new group</a>
+	<a sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STUFF')" th:href="@{/groups/new}">Add a new group</a>
 	<table>
 		<thead>
 			<tr>
@@ -30,12 +30,12 @@
 				<td th:text="${group.groupName}"></td>
 				<td sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STUFF')">
 					<span style="font-size: 2em; color: Mediumslateblue; margin-right: 10px;" class="material-symbols-outlined">
-						<a style="text-decoration: none;" th:href="@{'/groups-page/edit/' + ${group.id}}">edit</a>
+						<a style="text-decoration: none;" th:href="@{'/groups/edit/' + ${group.id}}">edit</a>
 					</span>
 				</td>
 				<td sec:authorize="hasRole('ROLE_ADMIN')">
 					<span style="font-size: 2em; color: Mediumslateblue;" class="material-symbols-outlined">
-						<a style="text-decoration: none;" th:href="@{'/groups-page/delete/' + ${group.id}}">delete</a>
+						<a style="text-decoration: none;" th:href="@{'/groups/delete/' + ${group.id}}">delete</a>
 					</span>
 				</td>
 			</tr>

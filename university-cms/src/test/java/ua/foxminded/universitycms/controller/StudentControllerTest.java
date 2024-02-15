@@ -17,30 +17,40 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import ua.foxminded.universitycms.models.Student;
+import ua.foxminded.universitycms.service.CustomUserDetailsService;
 import ua.foxminded.universitycms.service.StudentService;
+import ua.foxminded.universitycms.util.ConfigSecurity;
+import ua.foxminded.universitycms.util.CustomSuccessHandler;
 
+@Import({ConfigSecurity.class, CustomUserDetailsService.class})
 @WebMvcTest(controllers = StudentController.class)
-public class StudentControllerTest {
+class StudentControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-
+	
+	@MockBean
+	private CustomUserDetailsService customUserDetailsService;	
+	@MockBean
+	private CustomSuccessHandler successHandler;
 	@MockBean
 	private StudentService studentService;
 
 	@Test
+	@WithMockUser(roles={"ADMIN", "STUFF", "STUDENT", "TEACHER"})
 	void whenGetStudentsNotEmptyExpectStudentsViewWithTwoStudents() throws Exception {
-
 		List<Student> students = new ArrayList<>();
 		students.add(new Student(1L, 1L, "John", "Doe"));
 		students.add(new Student(2L, 3L, "Jane", "Smith"));
 
 		when(studentService.getAllStudents()).thenReturn(students);
-		mockMvc.perform(get("/students-page/allStudents")).andExpect(status().isOk()).andExpect(view().name("students-page"))
+		mockMvc.perform(get("/students/")).andExpect(status().isOk()).andExpect(view().name("students"))
 				.andExpect(model().attributeExists("students")).andExpect(model().attribute("students", students))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(containsString("Doe")))
@@ -48,12 +58,12 @@ public class StudentControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles={"ADMIN", "STUFF", "STUDENT", "TEACHER"})
 	void whenGetStudentsIsEmptyExpectStudentsViewWithNoStudents() throws Exception {
-
 		List<Student> students = new ArrayList<>();
 
 		when(studentService.getAllStudents()).thenReturn(students);
-		mockMvc.perform(get("/students-page/allStudents")).andExpect(status().isOk()).andExpect(view().name("students-page"))
+		mockMvc.perform(get("/students/")).andExpect(status().isOk()).andExpect(view().name("students"))
 				.andExpect(model().attributeExists("students")).andExpect(model().attribute("students", empty()))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(not(containsString("Doe"))))

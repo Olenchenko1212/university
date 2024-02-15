@@ -8,7 +8,7 @@
 </head>
 <body style="max-width: 1000px; margin: 0 auto">
 	<h1>[[${pageTitle}]]</h1>
-	<form th:action="@{/courses-page/save}" method="post" enctype="multipart/form-data" th:object="${course}">
+	<form th:action="@{/courses/save}" method="post" enctype="multipart/form-data" th:object="${course}">
 	 	<input type="hidden" th:field="*{id}" />
         <div>Course name:
  			<input type="text" th:field="*{courseName}" minlength="2" maxlength="256" class="form-control" />	
@@ -16,7 +16,6 @@
         <div>Course description:
  			<input type="text" th:field="*{courseDescription}" minlength="2" maxlength="256" class="form-control" />	
         </div>
- 
   		<div>Teacher for course: 
         	<label th:text="${course.teacher.teacherSurname}"></label>
         </div>    
@@ -27,6 +26,6 @@
         	<input type="submit" value="Save" class="btn btn-primary btn-sm mr-2" />
         </div>
 	</form>
-	<a th:href="@{/courses-page/}">Back to Courses</a>
+	<a th:href="@{/courses/}">Back to Courses</a>
 </body>
 </html>

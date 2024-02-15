@@ -48,12 +48,12 @@ class GroupControllerTest {
 		group.setGroupName("sd-34");
 
 		doNothing().when(groupService).saveGroup(group);
-		mockMvc.perform(post("/groups-page/save")
+		mockMvc.perform(post("/groups/save")
 				.contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8")
 				.param("id", "1")
 				.param("groupName", "sd-34"))
 				.andExpect(status().is3xxRedirection())
-				.andExpect(header().string("Location", "/groups-page/"));
+				.andExpect(header().string("Location", "/groups/"));
 	}
 	
 	@Test
@@ -64,12 +64,12 @@ class GroupControllerTest {
 		group.setGroupName("sd-34");
 
 		doNothing().when(groupService).deleteGroup(group.getId());
-		mockMvc.perform(get("/groups-page/delete/{id}", group.getId())
+		mockMvc.perform(get("/groups/delete/{id}", group.getId())
 				.contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8")
 				.param("id", "1")
 				.param("groupName", "sd-34"))
 				.andExpect(status().is3xxRedirection())
-				.andExpect(header().string("Location", "/groups-page/"));
+				.andExpect(header().string("Location", "/groups/"));
 	}
 	
 	@Test
@@ -80,7 +80,7 @@ class GroupControllerTest {
 		group.setGroupName("sd-34");
 
 		when(groupService.getGroupById(group.getId())).thenReturn(Optional.of(group));
-		mockMvc.perform(get("/groups-page/edit/{id}", group.getId())
+		mockMvc.perform(get("/groups/edit/{id}", group.getId())
 				.contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(view().name("group-form"))
 				.andExpect(model().attributeExists("group"))
@@ -95,8 +95,8 @@ class GroupControllerTest {
 		group.setGroupName("sd-34");
 
 		when(groupService.getGroupById(group.getId())).thenReturn(Optional.empty());
-		mockMvc.perform(get("/groups-page/edit/{id}", group.getId())
+		mockMvc.perform(get("/groups/edit/{id}", group.getId())
 				.contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
-				.andExpect(view().name("redirect:/groups-page/"));
+				.andExpect(view().name("redirect:/groups/"));
 	}
 }

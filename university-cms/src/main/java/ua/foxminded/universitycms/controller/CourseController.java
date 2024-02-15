@@ -21,10 +21,10 @@ import ua.foxminded.universitycms.service.GroupService;
 import ua.foxminded.universitycms.service.TeacherService;
 
 @Controller
-@RequestMapping("/courses-page")
+@RequestMapping("/courses")
 public class CourseController {
 	
-	private String REDIRECT_TO_ALLCOURSES = "redirect:/courses-page/";
+	private String REDIRECT_TO_ALLCOURSES = "redirect:/courses/";
 	private String FORM = "course-form";
 	private String FORM_ASSIGN = "assign-course";
 	
@@ -40,7 +40,7 @@ public class CourseController {
 	@GetMapping("/")
 	public String courses(Model model) throws SQLException {
 		model.addAttribute("courses", courseService.getAllCourses());
-		return "courses-page";
+		return "courses";
 	}
 	
 	@GetMapping("/delete/{id}")

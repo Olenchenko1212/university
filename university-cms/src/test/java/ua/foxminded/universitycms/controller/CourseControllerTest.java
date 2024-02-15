@@ -46,7 +46,6 @@ class CourseControllerTest {
 	private CustomUserDetailsService customUserDetailsService;	
 	@MockBean
 	private CustomSuccessHandler successHandler;
-
 	@MockBean
 	private CourseService courseService;
 	@MockBean
@@ -62,8 +61,8 @@ class CourseControllerTest {
 		courses.add(new Course(2L, "History", "Introduction to World History"));
 
 		when(courseService.getAllCourses()).thenReturn(courses);
-		mockMvc.perform(get("/courses-page/"))
-				.andExpect(status().isOk()).andExpect(view().name("courses-page"))
+		mockMvc.perform(get("/courses/"))
+				.andExpect(status().isOk()).andExpect(view().name("courses"))
 				.andExpect(model().attributeExists("courses")).andExpect(model().attribute("courses", courses))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(containsString("Mathematics")))
@@ -76,7 +75,7 @@ class CourseControllerTest {
 		List<Course> courses = new ArrayList<>();
 
 		when(courseService.getAllCourses()).thenReturn(courses);
-		mockMvc.perform(get("/courses-page/")).andExpect(status().isOk()).andExpect(view().name("courses-page"))
+		mockMvc.perform(get("/courses/")).andExpect(status().isOk()).andExpect(view().name("courses"))
 				.andExpect(model().attributeExists("courses")).andExpect(model().attribute("courses", empty()))
 				.andExpect(content().contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(content().string(not(containsString("Mathematics"))))
@@ -97,7 +96,7 @@ class CourseControllerTest {
 		course.setTeacher(teacherNONE);
 
 		when(groupService.getAllGroups()).thenReturn(allGroups);
-		mockMvc.perform(get("/courses-page/new")).andExpect(status().isOk()).andExpect(view().name("course-form"))
+		mockMvc.perform(get("/courses/new")).andExpect(status().isOk()).andExpect(view().name("course-form"))
 				.andExpect(model().attributeExists("allGroups")).andExpect(model().attribute("allGroups", allGroups))
 				.andExpect(model().attributeExists("course")).andExpect(model().attribute("course", course))
 				.andExpect(model().attributeExists("pageTitle")).andExpect(model().attribute("pageTitle", "Create a new course"))
@@ -119,13 +118,13 @@ class CourseControllerTest {
 		course.setTeacher(teacherNONE);
 
 		doNothing().when(courseService).saveCourse(course);
-		mockMvc.perform(post("/courses-page/save")
+		mockMvc.perform(post("/courses/save")
 				.contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8")
 				.param("id", "1")
 				.param("courseName", "Bobby")
 				.param("courseDescription", "Mars"))
 				.andExpect(status().is3xxRedirection())
-				.andExpect(header().string("Location", "/courses-page/"));
+				.andExpect(header().string("Location", "/courses/"));
 	}
 	
 	@Test
@@ -141,13 +140,13 @@ class CourseControllerTest {
 		course.setTeacher(teacherNONE);
 
 		doNothing().when(courseService).deleteCourse(course.getId());
-		mockMvc.perform(get("/courses-page/delete/{id}", course.getId())
+		mockMvc.perform(get("/courses/delete/{id}", course.getId())
 				.contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8")
 				.param("id", "1")
 				.param("courseName", "Bobby")
 				.param("courseDescription", "Mars"))
 				.andExpect(status().is3xxRedirection())
-				.andExpect(header().string("Location", "/courses-page/"));
+				.andExpect(header().string("Location", "/courses/"));
 	}
 	
 	@Test
@@ -163,7 +162,7 @@ class CourseControllerTest {
 		course.setTeacher(teacherNONE);
 
 		when(courseService.getCourseById(course.getId())).thenReturn(Optional.of(course));
-		mockMvc.perform(get("/courses-page/edit/{id}", course.getId())
+		mockMvc.perform(get("/courses/edit/{id}", course.getId())
 				.contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(view().name("course-form"))
 				.andExpect(model().attributeExists("course"))
@@ -177,9 +176,9 @@ class CourseControllerTest {
 		course.setId(1L);
 
 		when(courseService.getCourseById(course.getId())).thenReturn(Optional.empty());
-		mockMvc.perform(get("/courses-page/edit/{id}", course.getId())
+		mockMvc.perform(get("/courses/edit/{id}", course.getId())
 				.contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
-				.andExpect(view().name("redirect:/courses-page/"));
+				.andExpect(view().name("redirect:/courses/"));
 	}
 	
 	@Test
@@ -195,7 +194,7 @@ class CourseControllerTest {
 		course.setTeacher(teacherNONE);
 
 		when(courseService.getCourseById(course.getId())).thenReturn(Optional.of(course));
-		mockMvc.perform(get("/courses-page/assign/{id}", course.getId())
+		mockMvc.perform(get("/courses/assign/{id}", course.getId())
 				.contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(view().name("assign-course"))
 				.andExpect(model().attributeExists("course"))
@@ -209,8 +208,8 @@ class CourseControllerTest {
 		course.setId(1L);
 
 		when(courseService.getCourseById(course.getId())).thenReturn(Optional.empty());
-		mockMvc.perform(get("/courses-page/assign/{id}", course.getId())
+		mockMvc.perform(get("/courses/assign/{id}", course.getId())
 				.contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
-				.andExpect(view().name("redirect:/courses-page/"));
+				.andExpect(view().name("redirect:/courses/"));
 	}
 }

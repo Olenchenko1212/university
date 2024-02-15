@@ -8,7 +8,7 @@
 </head>
 <body style="max-width: 1000px; margin: 0 auto">
 	<h1>[[${pageTitle}]]</h1>
-	<form th:action="@{/groups-page/save}" method="post" enctype="multipart/form-data" th:object="${group}">
+	<form th:action="@{/groups/save}" method="post" enctype="multipart/form-data" th:object="${group}">
 	 	<input type="hidden" th:field="*{id}" />
         <div>Course name:
  			<input type="text" th:field="*{groupName}" minlength="2" maxlength="256" class="form-control" />	
@@ -17,6 +17,6 @@
         	<input type="submit" value="Save" class="btn btn-primary btn-sm mr-2" />
         </div>
 	</form>
-	<a th:href="@{/groups-page/}">Back to Groups</a>
+	<a th:href="@{/groups/}">Back to Groups</a>
 </body>
 </html>

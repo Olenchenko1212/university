@@ -15,10 +15,10 @@ import ua.foxminded.universitycms.models.Group;
 import ua.foxminded.universitycms.service.GroupService;
 
 @Controller
-@RequestMapping("/groups-page")
+@RequestMapping("/groups")
 public class GroupController {
 	
-	private String REDIRECT_TO_ALLGROUPS = "redirect:/groups-page/";
+	private String REDIRECT_TO_ALLGROUPS = "redirect:/groups/";
 	private String FORM = "group-form";
 	
 	@Autowired
@@ -27,7 +27,7 @@ public class GroupController {
 	@GetMapping("/")
 	public String groups(Model model) throws SQLException {
 		model.addAttribute("groups", groupService.getAllGroups());
-		return "groups-page";
+		return "groups";
 	}
 	
 	@GetMapping("/new")

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ua.foxminded.universitycms.service.TimeTableService;
 
 @Controller
-@RequestMapping("/schedule-page")
+@RequestMapping("/schedule")
 public class TimeTableController {
 
 	@Autowired
@@ -20,6 +20,6 @@ public class TimeTableController {
 	@GetMapping("/generalSchedule")
 	public String timeTables(Model model) throws SQLException {
 		model.addAttribute("timeTables", timeTableService.getAllTimeTable());
-		return "schedule-page";
+		return "schedule";
 	}
 }

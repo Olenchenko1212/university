@@ -16,7 +16,7 @@
 		</span>
 	</h1>
 	<h2>Courses of University</h2>
-	<a sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STUFF')" th:href="@{/courses-page/new}">Add a new course</a>
+	<a sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STUFF')" th:href="@{/courses/new}">Add a new course</a>
 	<table>
 		<thead>
 			<tr>
@@ -32,17 +32,17 @@
 				<td th:text="${course.courseDescription}"></td>
 				<td sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STUFF')">
 					<span style="font-size: 2em; color: Mediumslateblue; margin-right: 10px;" class="material-symbols-outlined">
-						<a style="text-decoration: none;" th:href="@{'/courses-page/edit/' + ${course.id}}">edit</a>
+						<a style="text-decoration: none;" th:href="@{'/courses/edit/' + ${course.id}}">edit</a>
 					</span>
 				</td>
-				<td sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STUFF')">
+				<td sec:authorize="hasRole('ROLE_STUFF')">
 					<span  style="font-size: 2em; color: Mediumslateblue; margin-right: 10px;" class="material-symbols-outlined">
-						<a style="text-decoration: none;" th:href="@{'/courses-page/assign/' + ${course.id}}">assignment_add</a>
+						<a style="text-decoration: none;" th:href="@{'/courses/assign/' + ${course.id}}">assignment_add</a>
 					</span>
 				</td>
 				<td sec:authorize="hasRole('ROLE_ADMIN')">
 					<span style="font-size: 2em; color: Mediumslateblue;" class="material-symbols-outlined">
-						<a style="text-decoration: none;" th:href="@{'/courses-page/delete/' + ${course.id}}">delete</a>
+						<a style="text-decoration: none;" th:href="@{'/courses/delete/' + ${course.id}}">delete</a>
 					</span>
 				</td>
 			</tr>

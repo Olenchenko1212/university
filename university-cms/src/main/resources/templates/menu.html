@@ -17,19 +17,19 @@
 	</h1>
 	<h2>University Menu</h2>
 		<h4>
-			<a th:href="@{/students-page/allStudents}">Students</a>
+			<a th:href="@{/students/}">Students</a>
 		</h4>
 		<h4>
-			<a th:href="@{/teachers-page/allTeachers}">Teachers</a>
+			<a th:href="@{/teachers/}">Teachers</a>
 		</h4>
 		<h4>
-			<a th:href="@{/courses-page/}">Courses</a>
+			<a th:href="@{/courses/}">Courses</a>
 		</h4>
 		<h4>
-			<a th:href="@{/groups-page/}">Groups</a>
+			<a th:href="@{/groups/}">Groups</a>
 		</h4>
 		<h4>
-			<a th:href="@{/schedule-page/generalSchedule}">Schedule</a>
+			<a th:href="@{/schedule/generalSchedule}">Schedule</a>
 		</h4>
 		<div style="text-align: center;" sec:authorize="hasRole('ROLE_ADMIN')">
   			<a th:href="@{/admin-panel}"> to Admin-panel</a>

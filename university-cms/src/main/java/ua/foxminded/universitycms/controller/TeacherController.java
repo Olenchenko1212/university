@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ua.foxminded.universitycms.service.TeacherService;
 
 @Controller
-@RequestMapping("/teachers-page")
+@RequestMapping("/teachers")
 public class TeacherController {
 	
 	@Autowired
 	private TeacherService teacherService;
 	
-	@GetMapping("/allTeachers")
+	@GetMapping("/")
 	public String teachers(Model model) throws SQLException {
 		model.addAttribute("teachers", teacherService.getAllTeachers());
-		return "teachers-page";
+		return "teachers";
 	}
 }
