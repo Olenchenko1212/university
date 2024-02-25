@@ -14,4 +14,5 @@ public interface UserService {
 	User findByName(String name) throws SQLException;
 	User findById(Long userId) throws SQLException;
 	List<User> getAllUsers() throws SQLException;
+	List<User> getStudents() throws SQLException;
 }

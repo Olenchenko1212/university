@@ -159,36 +159,36 @@ class TimeTableServiceImplTest {
 	@Test
 	void whenSchedulByDayForStudentArePresentExpectListTimeTableForStudent() throws Exception {
 		Student student = new Student();
-		student.setStudentId(1L);
+		student.setId(1L);
 		student.setStudentName("Bob");
 		student.setStudentSurname("Murray");
-		student.setGroupId(2L);
+		student.setGroup(new Group(1L, "er-34"));
 		List<TimeTable> expectTimeTableForStudent = new ArrayList<TimeTable>();
 		expectTimeTableForStudent.add(new TimeTable(1L, 3, LocalDate.of(2023, 05, 25), 2L));
 		expectTimeTableForStudent.add(new TimeTable(2L, 4, LocalDate.of(2023, 05, 25), 2L));
 		
-		when(studentRepository.findById(student.getStudentId())).thenReturn(Optional.of(student));
-		when(timeTableRepository.findBytimeTableDateAndGroupId(LocalDate.of(2023, 05, 25), student.getGroupId())).thenReturn(expectTimeTableForStudent);
-		timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getStudentId());
-		verify(studentRepository, times(1)).findById(student.getStudentId());
-		verify(timeTableRepository, times(1)).findBytimeTableDateAndGroupId(LocalDate.of(2023, 05, 25), student.getGroupId());
-		assertEquals(expectTimeTableForStudent, timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getStudentId()));
+		when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
+		when(timeTableRepository.findBytimeTableDateAndGroupId(LocalDate.of(2023, 05, 25), student.getId())).thenReturn(expectTimeTableForStudent);
+		timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getId());
+		verify(studentRepository, times(1)).findById(student.getId());
+		verify(timeTableRepository, times(1)).findBytimeTableDateAndGroupId(LocalDate.of(2023, 05, 25), student.getId());
+		assertEquals(expectTimeTableForStudent, timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getId()));
 	}
 	
 	@Test
 	void whenSchedulByDayForStudentAreNotPresentExpectEmptyListTimeTable() throws Exception {
 		Student student = new Student();
-		student.setStudentId(1L);
+		student.setId(1L);
 		student.setStudentName("Bob");
 		student.setStudentSurname("Murray");
-		student.setGroupId(2L);
+		student.setGroup(new Group(1L, "df-45"));
 		List<TimeTable> expectTimeTableForStudent = new ArrayList<TimeTable>();
 
-		when(studentRepository.findById(student.getStudentId())).thenReturn(Optional.of(student));
-		when(timeTableRepository.findBytimeTableDateAndGroupId(LocalDate.of(2023, 05, 25), student.getGroupId())).thenReturn(expectTimeTableForStudent);
-		timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getStudentId());
-		verify(studentRepository, times(1)).findById(student.getStudentId());
-		verify(timeTableRepository, times(1)).findBytimeTableDateAndGroupId(LocalDate.of(2023, 05, 25), student.getGroupId());
-		assertEquals(new ArrayList<TimeTable>(), timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getStudentId()));
+		when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
+		when(timeTableRepository.findBytimeTableDateAndGroupId(LocalDate.of(2023, 05, 25), student.getId())).thenReturn(expectTimeTableForStudent);
+		timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getId());
+		verify(studentRepository, times(1)).findById(student.getId());
+		verify(timeTableRepository, times(1)).findBytimeTableDateAndGroupId(LocalDate.of(2023, 05, 25), student.getId());
+		assertEquals(new ArrayList<TimeTable>(), timeTableService.getTimeTableByDayForStudent(LocalDate.of(2023, 05, 25), student.getId()));
 	}
 }

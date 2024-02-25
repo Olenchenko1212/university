@@ -39,11 +39,12 @@ ALTER TABLE IF EXISTS university.teachers
 --///////////////////////////////////////////////////
 CREATE TABLE IF NOT EXISTS university.students
 (
-  	student_id bigint NOT NULL DEFAULT nextval('university.students_student_id_seq'::regclass),
+  	id bigint NOT NULL DEFAULT nextval('university.students_student_id_seq'::regclass),
     group_id bigint,
     student_name character(255) COLLATE pg_catalog."default",
     student_surname character(255) COLLATE pg_catalog."default",
-    CONSTRAINT student_pkey PRIMARY KEY (student_id)
+    user_id bigint,
+    CONSTRAINT student_pkey PRIMARY KEY (id)
 )
 
 TABLESPACE pg_default;

@@ -9,6 +9,6 @@ import ua.foxminded.universitycms.models.Student;
 public interface StudentService {
 	List<Student> getAllStudents() throws SQLException;
 	Optional<Student> getStudentById(Long studentId) throws SQLException;
-	void saveStudent(Student student, Long groupId) throws Exception, SQLException;
-	void deleteStudent(Long studentId) throws SQLException;
+	void saveStudent(Student student) throws Exception, SQLException;
+	void assignStudent(Student student) throws Exception, SQLException;
 }

@@ -67,7 +67,7 @@ public class TimeTableServiceImpl implements TimeTableService {
 			logger.info("SAVE TimeTable Id = {} for free time", timeTable.getTimeTableId());
 		}
 	}
-	
+
 	@Override
 	public void deleteTimeTable(Long timeTableId) {
 		timeTableRepository.deleteById(timeTableId);
@@ -87,7 +87,7 @@ public class TimeTableServiceImpl implements TimeTableService {
 		Optional<Student> student = studentRepository.findById(studentId);
 		if (student.isPresent()) {
 			timeTableByDayForStudent = timeTableRepository.findBytimeTableDateAndGroupId(timeTableDate,
-					student.get().getGroupId());
+					student.get().getGroup().getId());
 			logger.info("Take timeTable for student id = {}", studentId);
 		} else {
 			logger.error("The student id = {} is not find in DB", studentId,
@@ -113,7 +113,7 @@ public class TimeTableServiceImpl implements TimeTableService {
 		}
 		return !isPresent;
 	}
-	
+
 	private void saveTimeTable(TimeTable timeTable, Long groupId, Long teacherId) throws Exception {
 		Optional<Group> group = groupRepository.findById(groupId);
 		Optional<Teacher> teacher = teacherRepository.findById(teacherId);

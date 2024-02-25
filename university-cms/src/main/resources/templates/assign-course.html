@@ -27,7 +27,7 @@
         <div>Select groups for course:
 	        <div th:each="group : ${allGroups}">
 				<input type="checkbox" id="[[${group.groupName}]]" name="groups" th:value="${group.id}"
-						th:checked="${course.groups.contains(group)}" />			
+						th:checked="${course.groups.contains(group)}"/>
 				<label th:for="${group.id}" th:text="${group.groupName}"></label>
 	        </div>
         </div>

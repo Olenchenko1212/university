@@ -1,5 +1,6 @@
 package ua.foxminded.universitycms.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,5 @@ import ua.foxminded.universitycms.models.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByUsername(String userName);
+	List<User> findByRolesName(String name);
 }

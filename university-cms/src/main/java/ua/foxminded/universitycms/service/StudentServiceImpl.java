@@ -6,12 +6,11 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.foxminded.universitycms.models.Group;
 import ua.foxminded.universitycms.models.Student;
-import ua.foxminded.universitycms.repository.GroupRepository;
 import ua.foxminded.universitycms.repository.StudentRepository;
 
 @Service
@@ -19,14 +18,13 @@ public class StudentServiceImpl implements StudentService {
 	private static Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 
 	private final StudentRepository studentRepository;
-	private final GroupRepository groupRepository;
 
-	public StudentServiceImpl(StudentRepository studentRepository, GroupRepository groupRepository) {
+	public StudentServiceImpl(StudentRepository studentRepository) {
 		this.studentRepository = studentRepository;
-		this.groupRepository = groupRepository;
 	}
 
 	@Override
+	@Secured({ "ROLE_ADMIN", "ROLE_STUFF", "ROLE_STUDENT", "ROLE_TEACHER" })
 	public List<Student> getAllStudents() throws SQLException {
 		List<Student> allStudents = studentRepository.findAll();
 		logger.info("Getting all {} students from DB", allStudents.size());
@@ -34,6 +32,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
+	@Secured({ "ROLE_ADMIN", "ROLE_STUFF", "ROLE_STUDENT" })
 	public Optional<Student> getStudentById(Long studentId) throws SQLException {
 		logger.info("Getting student id = {} from DB", studentId);
 		return studentRepository.findById(studentId);
@@ -41,24 +40,17 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	@Transactional
-	public void saveStudent(Student student, Long groupId) throws Exception, SQLException {
-		Optional<Group> group = groupRepository.findById(groupId);
-		if (group.isPresent()) {
-			student.setGroup(group.get());
-			group.get().getStudents().add(student);
-			studentRepository.saveAndFlush(student);
-			logger.info("Save student {} into DB", student.getStudentSurname());
-		} else {
-			System.out.println(group);
-			logger.error("The group with id = {} is not present from univesity", groupId,
-					new Exception("The group is not present from univesity"));
-		}
+	@Secured("ROLE_STUDENT")
+	public void saveStudent(Student student) throws Exception, SQLException {
+		studentRepository.save(student);
+		logger.info("UPDATE student id = {} in DB", student.getId());
 	}
 
 	@Override
 	@Transactional
-	public void deleteStudent(Long studentId) throws SQLException {
-		studentRepository.deleteById(studentId);
-		logger.info("Student Id = {} delete from DB", studentId);
+	@Secured({ "ROLE_ADMIN", "ROLE_STUFF" })
+	public void assignStudent(Student student) throws Exception, SQLException {
+		studentRepository.save(student);
+		logger.info("ASSIGN/REASSIGN student id = {} to group", student.getId());
 	}
 }

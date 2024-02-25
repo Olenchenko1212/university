@@ -10,7 +10,7 @@
 	<h1>[[${pageTitle}]]</h1>
 	<form th:action="@{/groups/save}" method="post" enctype="multipart/form-data" th:object="${group}">
 	 	<input type="hidden" th:field="*{id}" />
-        <div>Course name:
+        <div>Group name:
  			<input type="text" th:field="*{groupName}" minlength="2" maxlength="256" class="form-control" />	
         </div>
         <div>

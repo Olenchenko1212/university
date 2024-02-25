@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Student Form</title>
+</head>
+<body style="max-width: 1000px; margin: 0 auto">
+	<h1>[[${pageTitle}]]</h1>
+
+<!-- 
+
+<input type="hidden" th:field="*{id}" />
+        <div>Student name:
+ 			<input type="text" th:field="*{studentName}" minlength="2" maxlength="256" class="form-control" />	
+        </div>
+        <div>Student Surname:
+ 			<input type="text" th:field="*{studentSurname}" minlength="2" maxlength="256" class="form-control" />	
+        </div>
+        <div>
+ -->
+
+	<form th:action="@{/students/save}" method="post" enctype="multipart/form-data" th:object="${student}">
+	 	
+		<input type="hidden" th:field="*{id}" />
+        <div>Student name:
+ 			<input type="text" th:field="*{studentName}" minlength="2" maxlength="256" class="form-control" />	
+        </div>
+        <div>Student surname:
+ 			<input type="text" th:field="*{studentSurname}" minlength="2" maxlength="256" class="form-control" />	
+        </div>
+         <div>Student group:
+ 			<label th:text="${student.group.groupName}"></label>	
+        </div>
+        
+<!-- 
+
+<div>Teacher for course: 
+        	<label th:text="${course.teacher.teacherSurname}"></label>
+        </div>    
+	    <div th:each="group : ${allGroups}">
+			<label type="hidden" id="[[${group.groupName}]]" name="groups" th:value="${group.id}" th:checked="${course.groups.contains(group)}" ></label>
+		</div>
+		
+		<div>
+        	<input type="submit" value="Save" class="btn btn-primary btn-sm mr-2" />
+        </div>
+ -->  		
+ 		
+        
+	</form>
+	<a th:href="@{/students/}">Back to Students</a>
+</body>
+</html>

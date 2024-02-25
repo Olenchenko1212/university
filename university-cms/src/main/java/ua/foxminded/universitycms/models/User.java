@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -34,6 +35,9 @@ public class User {
 				joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
 				inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private List<Role> roles = new ArrayList<>();
+	
+	@OneToOne(mappedBy = "user")
+	private Student student;
 
 	public User() {
 	}
@@ -56,6 +60,7 @@ public class User {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
+		result = prime * result + ((student == null) ? 0 : student.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -91,6 +96,13 @@ public class User {
 				return false;
 			}
 		} else if (!roles.equals(other.roles)) {
+			return false;
+		}
+		if (student == null) {
+			if (other.student != null) {
+				return false;
+			}
+		} else if (!student.equals(other.student)) {
 			return false;
 		}
 		if (username == null) {
@@ -133,5 +145,13 @@ public class User {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
 	}
 }
