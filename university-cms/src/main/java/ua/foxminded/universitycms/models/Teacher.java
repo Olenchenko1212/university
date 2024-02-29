@@ -30,12 +30,17 @@ public class Teacher {
 	@Column(name = "teacher_surname")
 	private String teacherSurname;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
+			CascadeType.REFRESH })
 	@JoinColumn(name = "course_id", referencedColumnName = "id")
 	private Course course;
 	
 	@OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<TimeTable> timeTable = new ArrayList<>();
+	
+	@OneToOne
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	private User user;
 
 	public Teacher() {
 	}
@@ -60,6 +65,8 @@ public class Teacher {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((teacherName == null) ? 0 : teacherName.hashCode());
 		result = prime * result + ((teacherSurname == null) ? 0 : teacherSurname.hashCode());
+		result = prime * result + ((timeTable == null) ? 0 : timeTable.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -103,6 +110,20 @@ public class Teacher {
 		} else if (!teacherSurname.equals(other.teacherSurname)) {
 			return false;
 		}
+		if (timeTable == null) {
+			if (other.timeTable != null) {
+				return false;
+			}
+		} else if (!timeTable.equals(other.timeTable)) {
+			return false;
+		}
+		if (user == null) {
+			if (other.user != null) {
+				return false;
+			}
+		} else if (!user.equals(other.user)) {
+			return false;
+		}
 		return true;
 	}
 
@@ -144,5 +165,13 @@ public class Teacher {
 
 	public void setTimeTable(List<TimeTable> timeTable) {
 		this.timeTable = timeTable;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

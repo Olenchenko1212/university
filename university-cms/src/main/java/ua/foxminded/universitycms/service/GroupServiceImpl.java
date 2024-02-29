@@ -12,16 +12,20 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import ua.foxminded.universitycms.models.Group;
+import ua.foxminded.universitycms.models.Student;
 import ua.foxminded.universitycms.repository.GroupRepository;
+import ua.foxminded.universitycms.repository.StudentRepository;
 
 @Service
 public class GroupServiceImpl implements GroupService {
 	private static Logger logger = LoggerFactory.getLogger(GroupServiceImpl.class);
 
 	private final GroupRepository groupRepository;
+	private final StudentRepository studentRepository;
 
-	public GroupServiceImpl(GroupRepository groupRepository) {
+	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository) {
 		this.groupRepository = groupRepository;
+		this.studentRepository = studentRepository;
 	}
 
 	@Override
@@ -56,6 +60,11 @@ public class GroupServiceImpl implements GroupService {
 	@Secured("ROLE_ADMIN")
 	public void deleteGroup(Long groupID) throws SQLException {
 		if (groupRepository.findById(groupID).isPresent()) {
+			List<Student> students = studentRepository.findByGroupId(groupID);
+			if(!students.isEmpty()) {
+				students.stream().forEach(s -> s.setGroup(null));
+				studentRepository.saveAll(students);
+			}
 			groupRepository.deleteById(groupID);
 			logger.info("Group Id = {} delete from DB", groupID);
 		} else {

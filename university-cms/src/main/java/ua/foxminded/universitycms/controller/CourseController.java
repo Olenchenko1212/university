@@ -123,7 +123,8 @@ public class CourseController {
 			course.setTeacher(makeTeacherNONE());
 			freeTeachers.add(0, makeTeacherNONE());
 		} else {
-			freeTeachers.add(0, makeTeacherNONE());
+			freeTeachers.add(0, course.getTeacher());
+			freeTeachers.add(1, makeTeacherNONE());
 		}
 		return freeTeachers;
 	}

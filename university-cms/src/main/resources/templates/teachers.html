@@ -1,15 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <title>Teachers Page</title>
 </head>
-<body>
+<body style="max-width: 1000px; margin: 0 auto">
+	<h1 th:inline="text">
+		<span sec:authorize="isAuthenticated()"> <<< Username:<span
+			sec:authentication="name"></span> | Roles:<span
+			sec:authentication="principal.authorities"></span> |<a
+			th:href="@{/logout}">Sign Out</a>
+		</span>
+	</h1>
 	<h2>Teachers of University</h2>
 	<table>
 		<thead>
 			<tr>
 				<th>Teacher ID</th>
+				<th>User ID</th>
 				<th>Teacher Name</th>
 				<th>Teacher Surname</th>
 			</tr>
@@ -17,11 +29,21 @@
 		<tbody>
 			<tr th:each="teacher : ${teachers}">
 				<td th:text="${teacher.id}"></td>
+				<td th:text="${teacher.user.id}"></td>
 				<td th:text="${teacher.teacherName}"></td>
 				<td th:text="${teacher.teacherSurname}"></td>
+				<td th:if="${teacher.user.id == currentUserId}">
+					<span style="font-size: 2em; color: Mediumslateblue; margin-right: 10px;" class="material-symbols-outlined">
+						<a style="text-decoration: none;" th:href="@{'/teachers/edit/' + ${teacher.id}}">edit</a>
+					</span>
+				</td>
+				<td th:if="${teacher.user.id != currentUserId}"></td>
 			</tr>
 		</tbody>
 	</table>
 	<a th:href="@{/menu}"> Back to Menu</a>
+	<div style="text-align: center;" sec:authorize="hasRole('ROLE_ADMIN')">
+		<a th:href="@{/admin-panel}"> to Admin-panel</a>
+	</div>
 </body>
 </html>

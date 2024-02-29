@@ -15,10 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ua.foxminded.universitycms.models.Role;
 import ua.foxminded.universitycms.models.Student;
+import ua.foxminded.universitycms.models.Teacher;
 import ua.foxminded.universitycms.models.User;
 import ua.foxminded.universitycms.models.UserDto;
 import ua.foxminded.universitycms.repository.RoleRepository;
 import ua.foxminded.universitycms.repository.StudentRepository;
+import ua.foxminded.universitycms.repository.TeacherRepository;
 import ua.foxminded.universitycms.repository.UserRepository;
 import ua.foxminded.universitycms.util.RoleEnum;
 
@@ -34,6 +36,8 @@ public class UserServiceImpl implements UserService {
 	private RoleRepository roleRepository;
 	@Autowired
 	private StudentRepository studentRepository;
+	@Autowired
+	private TeacherRepository teacherRepository;
 
 	@Override
 	@Transactional
@@ -46,21 +50,6 @@ public class UserServiceImpl implements UserService {
 			logger.info("Save User With login = {} to DB", userDto.getName());
 		} else {
 			logger.info("Role 'USER' not found in DB");
-		}
-	}
-
-	@Override
-	@Transactional
-	@Secured("ROLE_ADMIN")
-	public void updateUserRole(User newUser) throws SQLException {
-		Optional<User> user = userRepository.findById(newUser.getId());
-		if (user.isPresent() && !user.get().getRoles().equals(newUser.getRoles())) {
-			manageStudent(newUser, user);
-			user.get().getRoles().clear();
-			user.get().getRoles().addAll(newUser.getRoles());
-			logger.info("User With ID = {} UPDATE Roles", newUser.getId());
-		} else {
-			logger.info("User With ID = {} isnt found or with same roles", newUser.getId());
 		}
 	}
 
@@ -120,6 +109,50 @@ public class UserServiceImpl implements UserService {
 	public List<User> getStudents() throws SQLException {
 		List<User> users = userRepository.findByRolesName(RoleEnum.ROLE_STUDENT.toString());
 		return users;
+	}
+	
+	@Override
+	@Transactional
+	@Secured("ROLE_ADMIN")
+	public void updateUserRole(User newUser) throws SQLException {
+		Optional<User> user = userRepository.findById(newUser.getId());
+		if (user.isPresent() && !user.get().getRoles().equals(newUser.getRoles())) {
+			manageStudent(newUser, user);
+			manageTeacher(newUser, user);
+			user.get().getRoles().clear();
+			user.get().getRoles().addAll(newUser.getRoles());
+			logger.info("User With ID = {} UPDATE Roles", newUser.getId());
+		} else {
+			logger.info("User With ID = {} isnt found or with same roles", newUser.getId());
+		}
+	}
+	
+	private void manageTeacher(User newUser, Optional<User> user) throws SQLException {
+		if (isAddTeacher(newUser, user)) {
+			Teacher newTeacher = new Teacher();
+			newTeacher.setUser(user.get());
+			teacherRepository.save(newTeacher);
+			logger.info("SAVE Teacher With ID = {} when UPDATE User Roles", newTeacher.getId());
+		}
+		if (isDeleteTeacher(newUser, user)) {
+			Optional<Teacher> teacher = teacherRepository.findByUserId(newUser.getId());
+			if (teacher.isPresent()) {
+				logger.info("DELETE Teacher With ID = {} when UPDATE User Roles", teacher.get().getId());
+				teacherRepository.delete(teacher.get());
+			} else {
+				logger.error("Teacher not found for deleting", new Exception("Teacher not found for deleting"));
+			}
+		}
+	}
+
+	private boolean isAddTeacher(User newUser, Optional<User> user) {
+		return newUser.getRoles().stream().anyMatch(r -> r.getName().equals(RoleEnum.ROLE_TEACHER.toString()))
+				&& !user.get().getRoles().stream().anyMatch(r -> r.getName().equals(RoleEnum.ROLE_TEACHER.toString()));
+	}
+
+	private boolean isDeleteTeacher(User newUser, Optional<User> user) {
+		return !newUser.getRoles().stream().anyMatch(r -> r.getName().equals(RoleEnum.ROLE_TEACHER.toString()))
+				&& user.get().getRoles().stream().anyMatch(r -> r.getName().equals(RoleEnum.ROLE_TEACHER.toString()));
 	}
 
 	private void manageStudent(User newUser, Optional<User> user) throws SQLException {

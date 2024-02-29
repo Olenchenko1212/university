@@ -11,4 +11,5 @@ import ua.foxminded.universitycms.models.Teacher;
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 	Optional<Teacher> findByCourseId(Long courseId) throws SQLException;
+	Optional<Teacher> findByUserId(Long userId) throws SQLException;
 }

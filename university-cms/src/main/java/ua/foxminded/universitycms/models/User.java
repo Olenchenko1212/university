@@ -3,6 +3,7 @@ package ua.foxminded.universitycms.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -36,8 +37,11 @@ public class User {
 				inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private List<Role> roles = new ArrayList<>();
 	
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
 	private Student student;
+	
+	@OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+	private Teacher teacher;
 
 	public User() {
 	}
@@ -61,6 +65,7 @@ public class User {
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
 		result = prime * result + ((student == null) ? 0 : student.hashCode());
+		result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -103,6 +108,13 @@ public class User {
 				return false;
 			}
 		} else if (!student.equals(other.student)) {
+			return false;
+		}
+		if (teacher == null) {
+			if (other.teacher != null) {
+				return false;
+			}
+		} else if (!teacher.equals(other.teacher)) {
 			return false;
 		}
 		if (username == null) {
@@ -154,4 +166,14 @@ public class User {
 	public void setStudent(Student student) {
 		this.student = student;
 	}
+
+	public Teacher getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
+	}
+	
+	
 }

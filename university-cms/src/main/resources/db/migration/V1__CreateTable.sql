@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS university.teachers
     course_id bigint,
     teacher_name character(255) COLLATE pg_catalog."default",
     teacher_surname character(255) COLLATE pg_catalog."default",
+    user_id bigint,
     CONSTRAINT teachers_pkey PRIMARY KEY (id)
 )
 
