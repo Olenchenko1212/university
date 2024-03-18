@@ -22,6 +22,7 @@
 			<tr>
 				<th>Teacher ID</th>
 				<th>User ID</th>
+				<th>Teacher Course</th>
 				<th>Teacher Name</th>
 				<th>Teacher Surname</th>
 			</tr>
@@ -30,6 +31,7 @@
 			<tr th:each="teacher : ${teachers}">
 				<td th:text="${teacher.id}"></td>
 				<td th:text="${teacher.user.id}"></td>
+				<td th:text="${teacher.course.courseName}"></td>
 				<td th:text="${teacher.teacherName}"></td>
 				<td th:text="${teacher.teacherSurname}"></td>
 				<td th:if="${teacher.user.id == currentUserId}">

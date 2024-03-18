@@ -28,7 +28,7 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	@Secured({"ROLE_ADMIN", "ROLE_STUFF", "ROLE_STUDENT", "ROLE_TEACHER"})
+	@Secured({ "ROLE_ADMIN", "ROLE_STUFF", "ROLE_STUDENT", "ROLE_TEACHER" })
 	public List<Course> getAllCourses() {
 		List<Course> allCourses = courseRepository.findAll();
 		logger.info("Getting all {} courses from DB", allCourses.size());
@@ -36,7 +36,7 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	@Secured({"ROLE_ADMIN", "ROLE_STUFF"})
+	@Secured({ "ROLE_ADMIN", "ROLE_STUFF" })
 	public Optional<Course> getCourseById(Long id) throws SQLException {
 		logger.info("Getting course id = {} from DB", id);
 		return courseRepository.findById(id);
@@ -44,7 +44,7 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	@Transactional
-	@Secured({"ROLE_ADMIN", "ROLE_STUFF"})
+	@Secured({ "ROLE_ADMIN", "ROLE_STUFF" })
 	public void saveCourse(Course course) throws Exception, SQLException {
 		courseRepository.save(course);
 		logger.info("SAVE/UPDATE course id = {} to DB", course.getId());
@@ -70,51 +70,21 @@ public class CourseServiceImpl implements CourseService {
 			logger.error("Not find course from DB for deleting", new Exception("Not find course from DB"));
 		}
 	}
-	
+
 	@Override
 	@Transactional
 	@Secured("ROLE_STUFF")
 	public void assignCourse(Course newCourse) throws Exception, SQLException {
-		Optional<Course> oldCourse = courseRepository.findById(newCourse.getId());
-		Optional<Teacher> oldTeacher = teacherRepository.findByCourseId(newCourse.getId());
-		if (isLinkingCourseToTeacher(newCourse, oldCourse)) {
+		Optional<Teacher> teacher = teacherRepository.findByCourseId(newCourse.getId());
+		if (newCourse.getTeacher() != null && teacher.isPresent()) {
+			teacher.get().setCourse(null);
 			newCourse.getTeacher().setCourse(newCourse);
-			teacherRepository.save(newCourse.getTeacher());
-			logger.info("Link Course id = {} with Teacher id={}(change course_id in Teacher table from NULL to id)",
-					newCourse.getId(), newCourse.getTeacher().getId());
-		} else if (isLinkingCourseToAnotherTeacher(newCourse, oldCourse)) {
+		} else if (newCourse.getTeacher() != null && !teacher.isPresent()) {
 			newCourse.getTeacher().setCourse(newCourse);
-			teacherRepository.save(newCourse.getTeacher());
-			unlinkTeacherToCourse(oldTeacher);
-			logger.info("Link Course id = {} with Teacher id={}(change course_id in Teacher table from id to new_id)",
-					newCourse.getId(), newCourse.getTeacher().getId());
-		} else if (isUnlinkingCourseToTeacher(newCourse, oldCourse)) {
-			unlinkTeacherToCourse(oldTeacher);
-			teacherRepository.save(oldCourse.get().getTeacher());
-			logger.info("UnLink Course id = {} with Teacher (change course_id in Teacher table from id to NULL)",
-					newCourse.getId());
+		} else if (newCourse.getTeacher() == null && teacher.isPresent()) {
+			teacher.get().setCourse(null);
 		}
 		courseRepository.save(newCourse);
 		logger.info("ASSIGN Course id = {} successful", newCourse.getId());
-	}
-	
-	private void unlinkTeacherToCourse(Optional<Teacher> teacher) throws SQLException {
-		if (teacher.isPresent()) {
-			teacher.get().setCourse(null);
-		} else {
-			logger.info("Teacher id = {} not found in DB)", teacher.get().getId());
-		}
-	}
-
-	private boolean isLinkingCourseToTeacher(Course newCourse, Optional<Course> oldCourse) {
-		return newCourse.getTeacher().getId() != null && oldCourse.get().getTeacher().getId() == null;
-	}
-
-	private boolean isLinkingCourseToAnotherTeacher(Course newCourse, Optional<Course> oldCourse) {
-		return newCourse.getTeacher().getId() != null && oldCourse.get().getTeacher().getId() != null;
-	}
-
-	private boolean isUnlinkingCourseToTeacher(Course newCourse, Optional<Course> oldCourse) {
-		return newCourse.getTeacher().getId() == null && oldCourse.get().getTeacher().getId() != null;
 	}
 }

@@ -1,6 +1,7 @@
 package ua.foxminded.universitycms.models;
 
 import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,23 +11,23 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
 @Table(name = "timetable", schema = "university")
 public class TimeTable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "timetable_id")
-	private Long timeTableId;
+	@Column(name = "id")
+	private Long id;
 
 	@Column(name = "pair_number")
 	private int pairNumber;
 
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "timetable_date")
 	private LocalDate timeTableDate;
-
-	@Column(name = "group_id", insertable = false, updatable = false)
-	private Long groupId;
 
 	@ManyToOne
 	@JoinColumn(name = "group_id")
@@ -39,17 +40,16 @@ public class TimeTable {
 	public TimeTable() {
 	}
 
-	public TimeTable(Long timeTableId, int pairNumber, LocalDate timeTableDate, Long groupId) {
-		this.timeTableId = timeTableId;
+	public TimeTable(Long id, int pairNumber, LocalDate timeTableDate) {
+		this.id = id;
 		this.pairNumber = pairNumber;
 		this.timeTableDate = timeTableDate;
-		this.groupId = groupId;
 	}
 
 	@Override
 	public String toString() {
-		return "TimeTable [timetableId=" + timeTableId + ", pairNumber=" + pairNumber + ", timeTableDate="
-				+ timeTableDate + ", groupId=" + groupId + "]";
+		return "TimeTable [timetableId=" + id + ", pairNumber=" + pairNumber + ", timeTableDate="
+				+ timeTableDate +"]";
 	}
 
 	@Override
@@ -57,11 +57,10 @@ public class TimeTable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((group == null) ? 0 : group.hashCode());
-		result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
 		result = prime * result + pairNumber;
 		result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
 		result = prime * result + ((timeTableDate == null) ? 0 : timeTableDate.hashCode());
-		result = prime * result + ((timeTableId == null) ? 0 : timeTableId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -84,13 +83,7 @@ public class TimeTable {
 		} else if (!group.equals(other.group)) {
 			return false;
 		}
-		if (groupId == null) {
-			if (other.groupId != null) {
-				return false;
-			}
-		} else if (!groupId.equals(other.groupId)) {
-			return false;
-		}
+
 		if (pairNumber != other.pairNumber) {
 			return false;
 		}
@@ -108,22 +101,22 @@ public class TimeTable {
 		} else if (!timeTableDate.equals(other.timeTableDate)) {
 			return false;
 		}
-		if (timeTableId == null) {
-			if (other.timeTableId != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!timeTableId.equals(other.timeTableId)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		return true;
 	}
 
-	public Long getTimeTableId() {
-		return timeTableId;
+	public Long getId() {
+		return id;
 	}
 
-	public void setTimeTableId(Long timeTableId) {
-		this.timeTableId = timeTableId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public int getPairNumber() {
@@ -140,14 +133,6 @@ public class TimeTable {
 
 	public void setTimeTableDate(LocalDate timeTableDate) {
 		this.timeTableDate = timeTableDate;
-	}
-
-	public Long getGroupId() {
-		return groupId;
-	}
-
-	public void setGroupId(Long groupId) {
-		this.groupId = groupId;
 	}
 
 	public Group getGroup() {

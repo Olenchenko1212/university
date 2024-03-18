@@ -1,6 +1,5 @@
 package ua.foxminded.universitycms.models;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,8 +26,7 @@ public class Student {
 	@Column(name = "student_surname")
 	private String studentSurname;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.DETACH, CascadeType.REFRESH })
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "group_id", referencedColumnName = "id")
 	private Group group;
 	
@@ -49,7 +47,7 @@ public class Student {
 	public String toString() {
 		return "Student [id=" + id + ", studentName=" + studentName + ", studentSurname=" + studentSurname +"]";
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

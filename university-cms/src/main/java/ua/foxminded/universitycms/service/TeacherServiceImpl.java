@@ -40,10 +40,13 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	@Transactional
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN", "ROLE_TEACHER"})
 	public void saveTeacher(Teacher teacher) throws Exception, SQLException {
+		if(teacher.getCourse().getId() == -1L) {
+			teacher.setCourse(null);
+		}
 		teacherRepository.save(teacher);
-		logger.info("SAVE teacher id = {} into DB", teacher.getId());
+		logger.info("SAVE/UPDATE teacher id = {} when change his name or surname", teacher.getId());
 	}
 
 	@Override

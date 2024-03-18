@@ -42,6 +42,9 @@ public class StudentServiceImpl implements StudentService {
 	@Transactional
 	@Secured("ROLE_STUDENT")
 	public void saveStudent(Student student) throws Exception, SQLException {
+		if(student.getGroup().getId() == -1L) {
+			student.setGroup(null);
+		}
 		studentRepository.save(student);
 		logger.info("UPDATE student id = {} in DB", student.getId());
 	}

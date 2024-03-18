@@ -30,8 +30,7 @@ public class Teacher {
 	@Column(name = "teacher_surname")
 	private String teacherSurname;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
-			CascadeType.REFRESH })
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "course_id", referencedColumnName = "id")
 	private Course course;
 	

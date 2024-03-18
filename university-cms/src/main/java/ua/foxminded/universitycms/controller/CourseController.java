@@ -23,83 +23,83 @@ import ua.foxminded.universitycms.service.TeacherService;
 @Controller
 @RequestMapping("/courses")
 public class CourseController {
-	
+
 	private String REDIRECT_TO_ALLCOURSES = "redirect:/courses/";
 	private String FORM = "course-form";
 	private String FORM_ASSIGN = "assign-course";
-	
+
 	@Autowired
 	private CourseService courseService;
-	
+
 	@Autowired
 	private TeacherService teacherService;
-	
+
 	@Autowired
 	private GroupService groupService;
-	
+
 	@GetMapping("/")
 	public String courses(Model model) throws SQLException {
 		model.addAttribute("courses", courseService.getAllCourses());
 		return "courses";
 	}
-	
+
 	@GetMapping("/delete/{id}")
 	public String deleteCourse(@PathVariable("id") Long id) throws Exception {
 		courseService.deleteCourse(id);
 		return REDIRECT_TO_ALLCOURSES;
 	}
-	
+
 	@GetMapping("/new")
 	public String addCourse(Model model) throws SQLException {
 		Course course = new Course();
 		course.setCourseName("");
 		course.setCourseDescription("");
-		course.setTeacher(makeTeacherNONE());		
+		course.setTeacher(makeTeacherNONE());
 		List<Group> allGroups = groupService.getAllGroups();
 		model.addAttribute("course", course);
 		model.addAttribute("allGroups", allGroups);
 		model.addAttribute("pageTitle", "Create a new course");
 		return FORM;
 	}
-	
+
 	@GetMapping("/edit/{id}")
 	public String editCourse(@PathVariable("id") Long id, Model model) throws Exception {
 		Optional<Course> course = courseService.getCourseById(id);
-		if(course.isPresent()) {
+		if (course.isPresent()) {
 			List<Group> allGroups = groupService.getAllGroups();
-			if(course.get().getTeacher().getId() == null) {
+			if (course.get().getTeacher().getId() == null) {
 				course.get().setTeacher(makeTeacherNONE());
 			}
 			model.addAttribute("allGroups", allGroups);
 			model.addAttribute("course", course.get());
-			model.addAttribute("pageTitle", "Edit course with id=" + id);	
+			model.addAttribute("pageTitle", "Edit course with id=" + id);
 			return FORM;
 		} else {
 			return REDIRECT_TO_ALLCOURSES;
-		}	
+		}
 	}
-	
+
 	@GetMapping("/assign/{id}")
 	public String assignCourse(@PathVariable("id") Long id, Model model) throws Exception {
 		Optional<Course> course = courseService.getCourseById(id);
-		if(course.isPresent()) {
+		if (course.isPresent()) {
 			List<Group> allGroups = groupService.getAllGroups();
 			model.addAttribute("allGroups", allGroups);
 			model.addAttribute("course", course.get());
 			model.addAttribute("freeTeachers", findFreeTeacher(course.get()));
-			model.addAttribute("pageTitle", "Assign/reassign course with id=" + id);	
+			model.addAttribute("pageTitle", "Assign/reassign course with id=" + id);
 			return FORM_ASSIGN;
 		} else {
 			return REDIRECT_TO_ALLCOURSES;
-		}	
+		}
 	}
-	
+
 	@PostMapping("/save")
 	public String saveCourse(Course course) throws SQLException, Exception {
 		courseService.saveCourse(course);
 		return REDIRECT_TO_ALLCOURSES;
 	}
-	
+
 	@PostMapping("/saveAssign")
 	public String saveAssignCourse(Course course) throws SQLException, Exception {
 		courseService.assignCourse(course);
@@ -107,19 +107,18 @@ public class CourseController {
 	}
 
 	private Teacher makeTeacherNONE() {
-		Teacher teacherNONE = new Teacher();	
+		Teacher teacherNONE = new Teacher();
 		teacherNONE.setTeacherName("NONE");
 		teacherNONE.setTeacherSurname("NONE");
 		return teacherNONE;
 	}
-	
-	private List<Teacher> findFreeTeacher(Course course) throws SQLException{
-		List<Teacher> freeTeachers = teacherService.getAllTeachers()
-				.stream()
-				.filter(t -> t.getCourse() == null)
+
+	private List<Teacher> findFreeTeacher(Course course) throws SQLException {
+		List<Teacher> freeTeachers = teacherService.getAllTeachers().stream()
+				.filter(t -> t.getCourse() == null && t.getTeacherName() != null && t.getTeacherSurname() != null)
 				.collect(Collectors.toList());
 
-		if(course.getTeacher().getId() == null) {
+		if (course.getTeacher() == null) {
 			course.setTeacher(makeTeacherNONE());
 			freeTeachers.add(0, makeTeacherNONE());
 		} else {

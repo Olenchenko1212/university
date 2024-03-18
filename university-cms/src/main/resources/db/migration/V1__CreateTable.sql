@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS university.groups
 (
     id bigint NOT NULL DEFAULT nextval('university.groups_group_id_seq'::regclass),
     group_name character(255) COLLATE pg_catalog."default",
-    CONSTRAINT group_pkey PRIMARY KEY (group_id)
+    CONSTRAINT group_pkey PRIMARY KEY (id)
 )
 
 TABLESPACE pg_default;
@@ -55,12 +55,12 @@ ALTER TABLE IF EXISTS university.students
 --//////////////////////////////////////////////////
 CREATE TABLE IF NOT EXISTS university.timetable
 (
-    timetable_id bigint NOT NULL DEFAULT nextval('university.timetable_timetable_id_seq'::regclass),
+    id bigint NOT NULL DEFAULT nextval('university.timetable_timetable_id_seq'::regclass),
     pair_number integer NOT NULL,
     timetable_date date NOT NULL,
     group_id bigint,
     teacher_id bigint,
-    CONSTRAINT timetable_pkey PRIMARY KEY (timetable_id)
+    CONSTRAINT timetable_pkey PRIMARY KEY (id)
 )
 
 TABLESPACE pg_default;

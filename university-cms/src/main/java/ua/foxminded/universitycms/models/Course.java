@@ -31,7 +31,8 @@ public class Course {
 	@Column(name = "course_description")
 	private String courseDescription;
 
-	@OneToOne(mappedBy = "course")
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "course", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
+			CascadeType.REFRESH })
 	private Teacher teacher;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
@@ -127,15 +128,15 @@ public class Course {
 	}
 
 	public String getCourseName() {
-		return courseName.trim();
+		return courseName;
 	}
 
 	public void setCourseName(String courseName) {
-		this.courseName = courseName.trim();
+		this.courseName = courseName;
 	}
 
 	public String getCourseDescription() {
-		return courseDescription.trim();
+		return courseDescription;
 	}
 
 	public void setCourseDescription(String courseDescription) {
@@ -143,9 +144,6 @@ public class Course {
 	}
 
 	public Teacher getTeacher() {
-		if (teacher == null) {
-			return new Teacher();
-		}
 		return teacher;
 	}
 

@@ -1,31 +1,122 @@
 <!DOCTYPE html>
-<html>
+<html lang="en"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Schedule Page</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+	<style>
+		table {border-collapse: collapse;}
+		.border {border-bottom: 1pt solid black;}
+	</style>
+	<title>Schedule Page</title>
+	<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+  	<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </head>
-<body>
+<body style="max-width: 1000px; margin: 0 auto">
+	<h4 th:inline="text">
+		<span sec:authorize="isAuthenticated()">
+			<<< Username:<span sec:authentication="name"></span>
+			| Roles:<span sec:authentication="principal.authorities"></span>
+			|
+		</span>
+		<div><a th:href="@{/logout}">Sign Out</a></div>
+	</h4>
 	<h2>Schedule of University</h2>
-	<table>
+	<span sec:authorize="hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER')" th:if="${message != null}" class="alert alert-success alert-dismissible fade show text-center message"
+	      			role="alert">[[${message}]]
+	      				<button type="button" class="close btn-sm" data-dismiss="alert" aria-label="Close">
+	        				<span aria-hidden="true">&times;</span>
+	      				</button>
+	    		</span>
+	<div sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STUFF')">
+		<form th:action="@{/schedule/save}" method="post" th:object="${timeTable}">
+			<input type="hidden" th:field="*{id}" />
+			<div>
+				<label for="timeTable-pairNumber">Pair Number:</label>
+				<input type="radio" th:field="*{pairNumber}" required="required" th:value="1"/> 1
+				<input type="radio" th:field="*{pairNumber}" required="required" th:value="2"/> 2
+				<input type="radio"	th:field="*{pairNumber}" required="required" th:value="3"/> 3
+				<input type="radio" th:field="*{pairNumber}" required="required" th:value="4"/> 4
+				<input type="radio" th:field="*{pairNumber}" required="required" th:value="5"/> 5
+			</div>
+			</br>
+			<div>
+				<label for="timeTable-date">Date of schedule:</label>
+				<input type="date" required="required" th:field="*{timeTableDate}" id="timeTable-date" />
+			</div>
+			</br>
+			<div>Select group:
+				<select class="form-control" required="required" id="dropDownList" th:field="*{group}">
+					<option id="group" th:each="group : ${groups}"
+						th:value="${group.id}" th:text="${group.groupName}"></option>
+				</select>
+			</div>
+			</br>
+			<div> Select teacher:
+				<select class="form-control" required="required" id="dropDownList" th:field="*{teacher}">
+					<option th:each="teacher : ${teachers}" th:value="${teacher.id}"
+						th:text="${teacher.teacherSurname}">
+					</option>
+				<select>
+			</div>
+			</br>
+			<div><input type="submit" value="Save" class="btn btn-primary btn-sm mr-2" />
+				<span th:if="${message != null}" class="alert alert-success alert-dismissible fade show text-center message"
+	      			role="alert">[[${message}]]
+	      				<button type="button" class="close btn-sm" data-dismiss="alert" aria-label="Close">
+	        				<span aria-hidden="true">&times;</span>
+	      				</button>
+	    		</span>
+			</div>
+		</form>
+		</br></br>
+	</div>
+	<table style="border-collapse: collapse;">
 		<thead>
 			<tr>
 				<th>TimeTable ID</th>
 				<th>Pair Number</th>
 				<th>TimeTable Date</th>
-				<th>Group ID</th>
-				<th>Teacher ID</th>
+				<th>Group name</th>
+				<th>Teacher Surname</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="timeTable : ${timeTables}">
-				<td th:text="${timeTable.timeTableId}"></td>
+			<tr th:each="timeTable, stat : ${timeTables}"
+				th:class="${stat.index &lt; #lists.size(timeTables) - 1} and ${timeTables[stat.index].timeTableDate.isBefore(timeTables[stat.index+1].timeTableDate)} ? 'border' : ''">
+				<td th:text="${timeTable.id}"></td>
 				<td th:text="${timeTable.pairNumber}"></td>
 				<td th:text="${timeTable.timeTableDate}"></td>
-				<td th:text="${timeTable.groupId}"></td>
-				<td th:text="${timeTable.teacher.Id}"></td>
+				<td th:text="${timeTable.group.groupName}"></td>
+				<td th:text="${timeTable.teacher.teacherSurname}"></td>
+				<td sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STUFF')">
+					<span style="font-size: 2em; color: Mediumslateblue; margin-right: 10px;" class="material-symbols-outlined">
+						<a style="text-decoration: none;" th:href="@{'/schedule/edit/' + ${timeTable.id}}">edit</a>
+					</span>
+					<span style="font-size: 2em; color: Mediumslateblue;" class="material-symbols-outlined">
+						<a style="text-decoration: none;" th:href="@{'/schedule/delete/' + ${timeTable.id}}">delete</a>
+					</span>
+				</td>
 			</tr>
 		</tbody>
 	</table>
 	<a th:href="@{/menu}"> Back to Menu</a>
+	<div style="text-align: center;" sec:authorize="hasRole('ROLE_ADMIN')">
+		<a th:href="@{/admin-panel}"> to Admin-panel</a>
+	</div>
+	
+	<script type="text/javascript">
+		document.addEventListener("DOMContentLoaded", function() {
+		    var closeButtons = document.querySelectorAll('.close.btn-sm');
+		    closeButtons.forEach(function(button) {
+		        button.addEventListener('click', function() {
+		            var alert = button.closest('.alert');
+		            alert.style.display = 'none';
+		        });
+		    });
+		});
+	</script>
 </body>
 </html>
