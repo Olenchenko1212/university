@@ -35,7 +35,7 @@ public class StudentController {
 	@Autowired
 	private GroupService groupService;
 
-	@GetMapping("/")
+	@GetMapping
 	public String students(Model model) throws SQLException {
 		List<Student> students = studentService.getAllStudents();
 		for (Student student : students) {

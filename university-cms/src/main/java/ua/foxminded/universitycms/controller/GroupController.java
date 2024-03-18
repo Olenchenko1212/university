@@ -24,7 +24,7 @@ public class GroupController {
 	@Autowired
 	private GroupService groupService;
 	
-	@GetMapping("/")
+	@GetMapping
 	public String groups(Model model) throws SQLException {
 		model.addAttribute("groups", groupService.getAllGroups());
 		return "groups";

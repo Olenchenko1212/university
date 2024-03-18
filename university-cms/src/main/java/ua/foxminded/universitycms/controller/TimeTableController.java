@@ -42,7 +42,7 @@ public class TimeTableController {
 	@Autowired
 	private TimeTableService timeTableService;
 
-	@GetMapping("/")
+	@GetMapping
 	public String timeTables(Model model, RedirectAttributes redirectAttributes) throws Exception {
 		Map<String, Long> currentUser = getTeacherOrStudent();
 		if(currentUser.isEmpty()) {

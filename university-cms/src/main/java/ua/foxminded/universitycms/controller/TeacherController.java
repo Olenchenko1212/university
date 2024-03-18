@@ -31,7 +31,7 @@ public class TeacherController {
 	@Autowired
 	private UserService userService;
 	
-	@GetMapping("/")
+	@GetMapping
 	public String teachers(Model model) throws SQLException {
 		List<Teacher> teachers = teacherService.getAllTeachers();
 		for(Teacher teacher : teachers) {

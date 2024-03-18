@@ -37,7 +37,7 @@ public class CourseController {
 	@Autowired
 	private GroupService groupService;
 
-	@GetMapping("/")
+	@GetMapping
 	public String courses(Model model) throws SQLException {
 		model.addAttribute("courses", courseService.getAllCourses());
 		return "courses";
