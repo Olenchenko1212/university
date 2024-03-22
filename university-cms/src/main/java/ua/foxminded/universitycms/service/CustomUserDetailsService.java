@@ -1,5 +1,6 @@
 package ua.foxminded.universitycms.service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -25,12 +26,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByUsername(username).get();
-		if (user != null) {
-			logger.info("AUTHENTIFICAITED : {}", user.getUsername().trim());
-			return new org.springframework.security.core.userdetails.User(user.getUsername().trim(),
-					user.getPassword().trim(),
-					user.getRoles().stream().map((role) -> new SimpleGrantedAuthority(role.getName().trim()))
+		Optional<User> user = userRepository.findByUsername(username);
+		if (user.isPresent()) {
+			logger.info("AUTHENTIFICAITED : {}", user.get().getUsername().trim());
+			return new org.springframework.security.core.userdetails.User(user.get().getUsername().trim(),
+					user.get().getPassword().trim(),
+					user.get().getRoles().stream().map((role) -> new SimpleGrantedAuthority(role.getName().trim()))
 							.collect(Collectors.toList()));
 		} else {
 			throw new UsernameNotFoundException("Invalid username or password");
