@@ -120,6 +120,4 @@ public class TeacherControllerTest {
 				.contentType(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"))
 				.andExpect(view().name("redirect:/teachers/"));
 	}
-	
-	
 }

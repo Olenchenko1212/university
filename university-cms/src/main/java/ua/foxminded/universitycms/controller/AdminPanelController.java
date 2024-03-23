@@ -19,8 +19,9 @@ import ua.foxminded.universitycms.service.UserService;
 @Controller
 @RequestMapping("/admin-panel")
 public class AdminPanelController {
-	
-	private String REDIRECT_TO_ADMIN_PANEL = "redirect:/admin-panel";
+	private static String REDIRECT_TO_ADMIN_PANEL = "redirect:/admin-panel";
+	private static String ADMIN_PANEL = "admin-panel";
+	private static String EDIT_ROLES = "edit-roles";
 	
 	@Autowired
 	private UserService userService;
@@ -32,7 +33,7 @@ public class AdminPanelController {
 	public String adminPage(Model model) throws SQLException {
 		List<User> users = userService.getAllUsers();
 		model.addAttribute("users", users);
-		return "admin-panel";
+		return ADMIN_PANEL;
 	}
 	
 	@GetMapping("/delete/{userId}")
@@ -47,7 +48,7 @@ public class AdminPanelController {
 		List<Role> allRoles = roleService.getAllRoles();
 		model.addAttribute("user", user);
 		model.addAttribute("allRoles", allRoles);
-		return "edit-roles";
+		return EDIT_ROLES;
 	}
 	
 	@PostMapping("/save")

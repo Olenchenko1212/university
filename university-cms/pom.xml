@@ -48,7 +48,6 @@
 		    	<artifactId>flyway-core</artifactId>
 		   		<version>9.22.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -74,11 +73,8 @@
 		<dependency>
    			<groupId>org.thymeleaf.extras</groupId>
     		<artifactId>thymeleaf-extras-springsecurity5</artifactId>
-    		
 		</dependency>
-
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -87,5 +83,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

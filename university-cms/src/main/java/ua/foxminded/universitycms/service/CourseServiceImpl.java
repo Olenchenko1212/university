@@ -28,7 +28,7 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	@Secured({ "ROLE_ADMIN", "ROLE_STUFF", "ROLE_STUDENT", "ROLE_TEACHER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_STUFF", "ROLE_STUDENT", "ROLE_TEACHER", "ROLE_ANONYMOUS" })
 	public List<Course> getAllCourses() {
 		List<Course> allCourses = courseRepository.findAll();
 		logger.info("Getting all {} courses from DB", allCourses.size());

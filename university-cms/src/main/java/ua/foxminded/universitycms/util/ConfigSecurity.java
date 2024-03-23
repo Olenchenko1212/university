@@ -36,12 +36,10 @@ public class ConfigSecurity {
 	@Bean
 	public SecurityFilterChain configufe(HttpSecurity httpSecurity) throws Exception {
 		return httpSecurity.csrf().disable()
-				.authorizeHttpRequests()
-					.antMatchers("/login/**").permitAll()
-					.antMatchers("/registration/**").permitAll()
-					.and()
-				.authorizeHttpRequests().antMatchers("/admin-panel/**").hasRole("ADMIN").and()
-				.authorizeHttpRequests().antMatchers("/menu/**").hasAnyRole("USER", "ADMIN", "STUDENT", "TEACHER", "STUFF")
+				.authorizeRequests()
+					.antMatchers("/login", "/registration", "/home/**").anonymous()	
+					.antMatchers("/admin-panel/**").hasRole("ADMIN")
+					.antMatchers("/menu/**").hasAnyRole("USER", "ADMIN", "STUDENT", "TEACHER", "STUFF")
 				.and()
 				.formLogin()
 					.loginPage("/login")
