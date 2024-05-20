@@ -18,42 +18,41 @@ import org.springframework.transaction.PlatformTransactionManager;
 @ComponentScan("ua.foxminded.universitycms")
 @PropertySource("classpath:application.properties")
 public class Config {
-	
-    private static final String URL = "spring.datasource.url";
-    private static final String USER = "spring.datasource.username";
-    private static final String PASSWORD = "spring.datasource.password";
-    private static final String DRIVER = "spring.datasource.driver-class-name";
 
-    private final Environment environment;
+	private static final String URL = "spring.datasource.url";
+	private static final String USER = "spring.datasource.username";
+	private static final String PASSWORD = "spring.datasource.password";
+	private static final String DRIVER = "spring.datasource.driver-class-name";
 
-    public Config(Environment environment) {
-        this.environment = environment;
-    }
+	private final Environment environment;
 
-    @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getProperty(DRIVER));
-        dataSource.setUrl(environment.getProperty(URL));
-        dataSource.setUsername(environment.getProperty(USER));
-        dataSource.setPassword(environment.getProperty(PASSWORD));
-        return dataSource;
-    }
-    
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
-        LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-        emf.setDataSource(dataSource);
-        emf.setPackagesToScan("ua.foxminded.universitycms.models");
-        HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
-        jpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.PostgreSQLDialect");
-        emf.setJpaVendorAdapter(jpaVendorAdapter);
-        return emf;
-    }
+	public Config(Environment environment) {
+		this.environment = environment;
+	}
 
-    @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
-        return new JpaTransactionManager(emf);
-    }
+	@Bean
+	public DataSource dataSource() {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName(environment.getProperty(DRIVER));
+		dataSource.setUrl(environment.getProperty(URL));
+		dataSource.setUsername(environment.getProperty(USER));
+		dataSource.setPassword(environment.getProperty(PASSWORD));
+		return dataSource;
+	}
+
+	@Bean
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+		emf.setDataSource(dataSource);
+		emf.setPackagesToScan("ua.foxminded.universitycms.models");
+		HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+		jpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.PostgreSQLDialect");
+		emf.setJpaVendorAdapter(jpaVendorAdapter);
+		return emf;
+	}
+
+	@Bean
+	public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+		return new JpaTransactionManager(emf);
+	}
 }
-
